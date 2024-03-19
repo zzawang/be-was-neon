@@ -1,6 +1,5 @@
 package http.response;
 
-import static utils.Constant.BASIC_ROUTE;
 import static utils.Constant.CRLF;
 import static utils.Constant.ERROR_MSG_FORMAT;
 
@@ -10,28 +9,38 @@ import http.Version.ProtocolVersion;
 public class HttpResponse {
     private Version version;
     private Status status;
-    private ResponseHeaders responseHeaders;
+    private final ResponseHeaders responseHeaders;
     private byte[] httpRequestBody;
+
+    public HttpResponse() {
+        this.responseHeaders = new ResponseHeaders();
+    }
 
     public void setOkResponse(ContentType contentType, byte[] httpRequestBody) {
         this.version = new Version(ProtocolVersion.V_11.getVersion());
         this.status = Status.OK;
-        responseHeaders = new ResponseHeaders(httpRequestBody.length, contentType);
+        this.responseHeaders.setContentLength(httpRequestBody.length);
+        this.responseHeaders.setContentType(contentType);
         this.httpRequestBody = httpRequestBody;
     }
 
-    public void setRedirectResponse() {
+    public void setRedirectResponse(String path) {
         this.version = new Version(ProtocolVersion.V_11.getVersion());
         this.status = Status.REDIRECT;
-        responseHeaders = new ResponseHeaders(BASIC_ROUTE);
+        this.responseHeaders.setLocation(path);
     }
 
     public void setErrorResponse(Status status) {
         byte[] httpRequestBody = String.format(ERROR_MSG_FORMAT, status.getMsg()).getBytes();
         this.version = new Version(ProtocolVersion.V_11.getVersion());
         this.status = status;
-        responseHeaders = new ResponseHeaders(httpRequestBody.length, ContentType.html);
+        this.responseHeaders.setContentLength(httpRequestBody.length);
+        this.responseHeaders.setContentType(ContentType.html);
         this.httpRequestBody = httpRequestBody;
+    }
+
+    public void setCookie(String cookie) {
+        this.responseHeaders.setCookie(cookie);
     }
 
     public byte[] getHttpRequestBody() {
@@ -43,10 +52,13 @@ public class HttpResponse {
         sb.append(String.format("%s %s %s", version.getVersion(), status.getCode(), status.getMsg())).append(CRLF);
         if (status.equals(Status.REDIRECT)) {
             sb.append(String.format("Location: %s", responseHeaders.getLocation())).append(CRLF);
-            return sb.toString();
+        } else {
+            sb.append(String.format("Content-Type: %s", responseHeaders.getContentType())).append(CRLF);
+            sb.append(String.format("Content-Length: %s", responseHeaders.getContentLength())).append(CRLF);
         }
-        sb.append(String.format("Content-Type: %s", responseHeaders.getContentType())).append(CRLF);
-        sb.append(String.format("Content-Length: %s", responseHeaders.getContentLength())).append(CRLF);
+        if (responseHeaders.isCookiePresent()) {
+            sb.append(String.format("Set-Cookie: %s", responseHeaders.getCookie())).append(CRLF);
+        }
         return sb.toString();
     }
 }

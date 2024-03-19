@@ -23,7 +23,7 @@ public class Constant {
     public static final String LOGIN_HTML = "/login.html";
     public static final String LOGIN_FAILED_PATH = "/login_failed";
     public static final String LOGIN_FAIL_HTML = "/login_failed.html";
-    public static final String COOKIE_SETTING_FORMAT = "sid=%s; Path=/";
+    public static final String COOKIE_SETTING_FORMAT = "sid=%s; Path=%s";
     public static final int SID_START_INDEX = 0;
     public static final int SID_MAX_LENGTH = 6;
     public static final int SID_RANGE_NUM = 10;

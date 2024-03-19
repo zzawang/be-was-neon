@@ -1,9 +1,12 @@
 package http.request;
 
 import static utils.Constant.BLANK;
+import static utils.Constant.EMAIL_INDEX;
+import static utils.Constant.ID_INDEX;
+import static utils.Constant.NAME_INDEX;
+import static utils.Constant.PW_INDEX;
 import static webserver.RequestHandler.logger;
 
-import db.Database;
 import http.Version;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -12,10 +15,6 @@ import model.User;
 import utils.Decoder;
 
 public class HttpRequest {
-    private static final int ID_INDEX = 0;
-    private static final int PW_INDEX = 1;
-    private static final int NAME_INDEX = 2;
-    private static final int EMAIL_INDEX = 3;
     private static final int METHOD_INDEX = 0;
     private static final int FILE_PATH_INDEX = 1;
     private static final int VERSION_INDEX = 2;
@@ -71,12 +70,13 @@ public class HttpRequest {
         return Optional.ofNullable(requestHeaders.findHeader("Content-Length"));
     }
 
-    public void createUser() {
+    public User createUser() {
         String[] userEncodedInfo = body.extractUser();
         String[] userInfo = decodeUserInfo(userEncodedInfo);
         User user = generateUserObj(userInfo);
-        Database.addUser(user);
         logger.info(user.toString());
+
+        return user;
     }
 
     private String[] decodeUserInfo(String[] userEncodedInfo) {
