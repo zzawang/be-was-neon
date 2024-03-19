@@ -1,24 +1,12 @@
 package http.response;
 
+import java.util.Optional;
+
 public class ResponseHeaders {
     private Integer contentLength;
     private ContentType contentType;
     private String location;
     private String cookie;
-
-    public ResponseHeaders(Integer contentLength, ContentType contentType) {
-        this.contentLength = contentLength;
-        this.contentType = contentType;
-    }
-
-    public ResponseHeaders(String location) {
-        this.location = location;
-    }
-
-    public ResponseHeaders(ContentType contentType, String cookie) {
-        this.contentType = contentType;
-        this.cookie = cookie;
-    }
 
     public Integer getContentLength() {
         return contentLength;
@@ -34,5 +22,27 @@ public class ResponseHeaders {
 
     public String getCookie() {
         return cookie;
+    }
+
+    public void setContentLength(Integer contentLength) {
+        this.contentLength = contentLength;
+    }
+
+    public void setContentType(ContentType contentType) {
+        this.contentType = contentType;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setCookie(String cookie) {
+        this.cookie = cookie;
+    }
+
+    public boolean isCookiePresent() {
+        Optional<String> cookie = Optional.ofNullable(this.cookie);
+
+        return cookie.isPresent();
     }
 }
