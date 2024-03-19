@@ -13,7 +13,7 @@ public class SidGenerator {
 
     public static String generate() {
         String sid = generateRandomSid();
-        while (!sessionIds.contains(sid)) {
+        while (sessionIds.contains(sid)) {
             sid = generateRandomSid();
         }
         sessionIds.add(sid);
