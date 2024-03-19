@@ -15,7 +15,7 @@ class UserTest {
     @Test
     void create() {
         User user = new User(ID, PASSWORD, NAME, EMAIL);
-        assertThat(user.getUserId()).isEqualTo(ID);
+        assertThat(user.getId()).isEqualTo(ID);
         assertThat(user.getPassword()).isEqualTo(PASSWORD);
         assertThat(user.getName()).isEqualTo(NAME);
         assertThat(user.getEmail()).isEqualTo(EMAIL);
