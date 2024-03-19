@@ -48,7 +48,7 @@ public class RequestHandler implements Runnable {
             HttpRequestRouter httpRequestRouter = new HttpRequestRouter(httpRequest, httpResponse);
             httpRequestRouter.processRequest();
             sendResponse();
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (IOException | IllegalArgumentException | NullPointerException e) {
             logger.error(e.getMessage());
         }
     }
@@ -61,7 +61,7 @@ public class RequestHandler implements Runnable {
         logger.info(httpRequest.getFormattedRequest());
     }
 
-    private void setRequestFirstLine(BufferedReader br) throws IOException {
+    private void setRequestFirstLine(BufferedReader br) throws NullPointerException, IOException {
         String request = getFirstLine(br);
         try {
             httpRequest.setFirstLine(request);

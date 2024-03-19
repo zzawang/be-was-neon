@@ -30,7 +30,7 @@ public class HttpRequest {
     private RequestHeaders requestHeaders;
     private HttpRequestBody body;
 
-    public void setFirstLine(String firstLine) throws FileNotFoundException {
+    public void setFirstLine(String firstLine) throws NullPointerException, FileNotFoundException {
         String[] lines = firstLine.split(BLANK);
         this.method = new Method(lines[METHOD_INDEX]);
         this.filePath = new FilePath(lines[FILE_PATH_INDEX]);
