@@ -1,24 +1,23 @@
 package utils;
 
+import static utils.Constant.ARTICLE_HTML;
+import static utils.Constant.ARTICLE_PATH;
 import static utils.Constant.BASE_PATH;
+import static utils.Constant.BASIC_HTML;
 import static utils.Constant.BASIC_PATH;
-import static utils.Constant.BASIC_ROUTE;
+import static utils.Constant.COMMENT_HTML;
+import static utils.Constant.COMMENT_PATH;
+import static utils.Constant.LOGIN_FAILED_PATH;
+import static utils.Constant.LOGIN_FAIL_HTML;
+import static utils.Constant.LOGIN_HTML;
+import static utils.Constant.LOGIN_PATH;
+import static utils.Constant.REGISTRATION_HTML;
+import static utils.Constant.REGISTRATION_PATH;
 
 public class DirectoryMatcher {
-    private static final String ARTICLE_PATH = "/article";
-    private static final String ARTICLE_HTML = "/article.html";
-    private static final String COMMENT_PATH = "/comment";
-    private static final String COMMENT_HTML = "/comment.html";
-    private static final String REGISTRATION_PATH = "/registration";
-    private static final String REGISTRATION_HTML = "/register.html";
-    private static final String LOGIN_PATH = "/login";
-    private static final String LOGIN_FAILED_PATH = "/login_failed";
-    private static final String LOGIN_HTML = "/login.html";
-    private static final String LOGIN_FAIL_HTML = "/login_failed.html";
-
     public static String mathDirectory(String filePath) {
-        if (filePath.equals(BASIC_ROUTE) || filePath.equals(BASIC_PATH)) {
-            return BASE_PATH + BASIC_PATH;
+        if (filePath.equals(BASIC_PATH) || filePath.equals(BASIC_HTML)) {
+            return BASE_PATH + BASIC_HTML;
         }
         if (filePath.equals(ARTICLE_PATH) || filePath.equals(ARTICLE_HTML)) {
             return BASE_PATH + ARTICLE_PATH + ARTICLE_HTML;
