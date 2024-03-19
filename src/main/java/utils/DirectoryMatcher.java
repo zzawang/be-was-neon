@@ -12,7 +12,9 @@ public class DirectoryMatcher {
     private static final String REGISTRATION_PATH = "/registration";
     private static final String REGISTRATION_HTML = "/register.html";
     private static final String LOGIN_PATH = "/login";
+    private static final String LOGIN_FAILED_PATH = "/login_failed";
     private static final String LOGIN_HTML = "/login.html";
+    private static final String LOGIN_FAIL_HTML = "/login_failed.html";
 
     public static String mathDirectory(String filePath) {
         if (filePath.equals(BASIC_ROUTE) || filePath.equals(BASIC_PATH)) {
@@ -27,8 +29,11 @@ public class DirectoryMatcher {
         if (filePath.equals(REGISTRATION_PATH) || filePath.equals(REGISTRATION_HTML)) {
             return BASE_PATH + REGISTRATION_PATH + REGISTRATION_HTML;
         }
-        if (filePath.equals(LOGIN_PATH) || filePath.equals(LOGIN_HTML)) {
+        if (filePath.equals(LOGIN_PATH) || filePath.endsWith(LOGIN_HTML)) {
             return BASE_PATH + LOGIN_PATH + LOGIN_HTML;
+        }
+        if (filePath.equals(LOGIN_FAILED_PATH) || filePath.endsWith(LOGIN_FAIL_HTML)) {
+            return BASE_PATH + LOGIN_PATH + LOGIN_FAIL_HTML;
         }
         return BASE_PATH + filePath; // 나머지는 기본 경로
     }
