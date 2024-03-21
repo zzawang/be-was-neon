@@ -3,17 +3,20 @@ package http.response;
 import static utils.Constant.CRLF;
 import static utils.Constant.ERROR_MSG_FORMAT;
 
+import http.Headers;
 import http.Version;
 import http.Version.ProtocolVersion;
 
 public class Response {
+    private static final String FIRST_LINE = "%s %s %s";
+
     private Version version;
     private Status status;
-    private final ResponseHeaders responseHeaders;
+    private final Headers responseHeaders;
     private byte[] body;
 
     public Response() {
-        this.responseHeaders = new ResponseHeaders();
+        this.responseHeaders = new Headers();
     }
 
     public void setOkResponse(ContentType contentType, byte[] body) {
@@ -43,22 +46,14 @@ public class Response {
         this.responseHeaders.setCookie(cookie);
     }
 
-    public byte[] getResponseBody() {
-        return body;
-    }
-
     public String getResponseHeaders() {
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("%s %s %s", version.getVersion(), status.getCode(), status.getMsg())).append(CRLF);
-        if (status.equals(Status.REDIRECT)) {
-            sb.append(String.format("Location: %s", responseHeaders.getLocation())).append(CRLF);
-        } else {
-            sb.append(String.format("Content-Type: %s", responseHeaders.getContentType())).append(CRLF);
-            sb.append(String.format("Content-Length: %s", responseHeaders.getContentLength())).append(CRLF);
-        }
-        if (responseHeaders.isCookiePresent()) {
-            sb.append(String.format("Set-Cookie: %s", responseHeaders.getCookie())).append(CRLF);
-        }
+        sb.append(String.format(FIRST_LINE, version.getVersion(), status.getCode(), status.getMsg())).append(CRLF);
+        sb.append(responseHeaders.getHeaders()).append(CRLF);
         return sb.toString();
+    }
+
+    public byte[] getResponseBody() {
+        return body;
     }
 }

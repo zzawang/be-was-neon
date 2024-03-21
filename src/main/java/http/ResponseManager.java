@@ -1,7 +1,5 @@
 package http;
 
-import static utils.Constant.CRLF;
-
 import http.response.ContentType;
 import http.response.Response;
 import http.response.Status;
@@ -38,16 +36,15 @@ public class ResponseManager {
 
     public void sendResponse(OutputStream out) throws IOException {
         DataOutputStream dos = new DataOutputStream(out);
+        String headers = response.getResponseHeaders();
         byte[] body = response.getResponseBody();
-        String formattedBody = response.getResponseHeaders();
         try {
-            dos.writeBytes(formattedBody);
-            dos.writeBytes(CRLF);
+            dos.writeBytes(headers);
             dos.write(body, 0, body.length);
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-        logger.info(formattedBody);
+        logger.info(headers);
         dos.flush();
     }
 }

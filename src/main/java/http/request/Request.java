@@ -2,6 +2,7 @@ package http.request;
 
 import static utils.Constant.LINE_FEED;
 
+import http.Headers;
 import http.Version;
 import java.util.Optional;
 
@@ -14,7 +15,7 @@ public class Request {
     private Method method;
     private FilePath filePath;
     private Version version;
-    private RequestHeaders requestHeaders;
+    private Headers requestHeaders;
     private RequestBody body;
 
     public void setFirstLine(Method method, FilePath filePath, Version version) {
@@ -24,7 +25,7 @@ public class Request {
     }
 
     public void setRequestHeaders(String line) {
-        this.requestHeaders = new RequestHeaders();
+        this.requestHeaders = new Headers();
         this.requestHeaders.setHeaders(line);
     }
 
