@@ -6,48 +6,48 @@ import static utils.Constant.ERROR_MSG_FORMAT;
 import http.Version;
 import http.Version.ProtocolVersion;
 
-public class HttpResponse {
+public class Response {
     private Version version;
     private Status status;
     private final ResponseHeaders responseHeaders;
-    private byte[] httpRequestBody;
+    private byte[] body;
 
-    public HttpResponse() {
+    public Response() {
         this.responseHeaders = new ResponseHeaders();
     }
 
-    public void setOkResponse(ContentType contentType, byte[] httpRequestBody) {
+    public void setOkResponse(ContentType contentType, byte[] body) {
         this.version = new Version(ProtocolVersion.V_11.getVersion());
         this.status = Status.OK;
-        this.responseHeaders.setContentLength(httpRequestBody.length);
+        this.responseHeaders.setContentLength(body.length);
         this.responseHeaders.setContentType(contentType);
-        this.httpRequestBody = httpRequestBody;
+        this.body = body;
     }
 
-    public void setRedirectResponse(String path) {
+    public void setRedirectResponse(String redirectPath) {
         this.version = new Version(ProtocolVersion.V_11.getVersion());
         this.status = Status.REDIRECT;
-        this.responseHeaders.setLocation(path);
+        this.responseHeaders.setLocation(redirectPath);
     }
 
     public void setErrorResponse(Status status) {
-        byte[] httpRequestBody = String.format(ERROR_MSG_FORMAT, status.getMsg()).getBytes();
+        byte[] body = String.format(ERROR_MSG_FORMAT, status.getMsg()).getBytes();
         this.version = new Version(ProtocolVersion.V_11.getVersion());
         this.status = status;
-        this.responseHeaders.setContentLength(httpRequestBody.length);
+        this.responseHeaders.setContentLength(body.length);
         this.responseHeaders.setContentType(ContentType.html);
-        this.httpRequestBody = httpRequestBody;
+        this.body = body;
     }
 
     public void setCookie(String cookie) {
         this.responseHeaders.setCookie(cookie);
     }
 
-    public byte[] getHttpRequestBody() {
-        return httpRequestBody;
+    public byte[] getResponseBody() {
+        return body;
     }
 
-    public String getFormattedResponse() {
+    public String getResponseHeaders() {
         StringBuilder sb = new StringBuilder();
         sb.append(String.format("%s %s %s", version.getVersion(), status.getCode(), status.getMsg())).append(CRLF);
         if (status.equals(Status.REDIRECT)) {

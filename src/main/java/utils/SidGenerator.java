@@ -1,14 +1,14 @@
 package utils;
 
-import static utils.Constant.SID_MAX_LENGTH;
-import static utils.Constant.SID_RANGE_NUM;
-import static utils.Constant.SID_START_INDEX;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class SidGenerator {
+    private static final int SID_START_INDEX = 0;
+    private static final int SID_MAX_LENGTH = 6;
+    private static final int SID_RANGE_NUM = 10;
+
     private static final List<String> sessionIds = new ArrayList<>();
 
     public static String generate() {

@@ -1,43 +1,41 @@
 package http.request;
 
-import static utils.Constant.IS_INVALID_FILE_PATH;
-import static utils.Constant.USER_CREATE_COMMAND;
-import static utils.Constant.USER_LOGIN_COMMAND;
-
+import http.handler.CommandMatcher;
 import java.io.File;
 import java.io.FileNotFoundException;
 import utils.DirectoryMatcher;
 
 public class FilePath {
-    private final String originalFilePath;
-    private final String filePath;
+    public static final String IS_INVALID_FILE_PATH = "올바른 파일이 아닙니다.";
+    private final String filePathUrl;
 
-    public FilePath(String filePath) throws FileNotFoundException {
-        this.originalFilePath = filePath;
-        this.filePath = DirectoryMatcher.mathDirectory(filePath);
-        if (!isValidFilePath() && !isUserCreateCommand() && !isLoginCommand()) {
+    public FilePath(String filePathUrl) throws FileNotFoundException {
+        filePathUrl = filePathUrl.trim();
+        String absoluteFilePathUrl = DirectoryMatcher.mathDirectory(filePathUrl);
+        if (!isValidFilePath(absoluteFilePathUrl) && !CommandMatcher.isValidCommand(filePathUrl)) {
             throw new FileNotFoundException(IS_INVALID_FILE_PATH);
         }
+        this.filePathUrl = setFilePath(filePathUrl);
     }
 
-    private boolean isValidFilePath() {
+    private String setFilePath(String filePathUrl) {
+        String absoluteFilePathUrl = DirectoryMatcher.mathDirectory(filePathUrl);
+        if (isValidFilePath(absoluteFilePathUrl)) {
+            return absoluteFilePathUrl;
+        }
+        return filePathUrl;
+    }
+
+    public boolean isValidFilePath(String filePath) {
         File file = new File(filePath);
         return file.isFile() && file.exists();
     }
 
-    public boolean isUserCreateCommand() {
-        return originalFilePath.equals(USER_CREATE_COMMAND);
+    public String getFilePathUrl() {
+        return filePathUrl;
     }
 
-    public boolean isLoginCommand() {
-        return originalFilePath.equals(USER_LOGIN_COMMAND);
-    }
-
-    public String getOriginalFilePath() {
-        return originalFilePath;
-    }
-
-    public String getFilePath() {
-        return filePath;
+    public File makeFile() {
+        return new File(filePathUrl);
     }
 }

@@ -1,5 +1,7 @@
 package http;
 
+import java.util.Arrays;
+
 public class Version {
     public enum ProtocolVersion {
         V_09("HTTP/0.9"),
@@ -22,11 +24,10 @@ public class Version {
     private ProtocolVersion version;
 
     public Version(String version) {
-        for (ProtocolVersion protocolVersion : ProtocolVersion.values()) {
-            if (protocolVersion.getVersion().equals(version)) {
-                this.version = protocolVersion;
-            }
-        }
+        this.version = Arrays.stream(ProtocolVersion.values())
+                .filter(protocolVersion -> protocolVersion.getVersion().equals(version))
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
     }
 
     public String getVersion() {

@@ -2,16 +2,15 @@ package http.request;
 
 import static utils.Constant.EMPTY;
 
-public class HttpRequestBody {
+public class RequestBody {
     private static final String REPLACE_ID = "userId|userPw|userName|userEmail|=";
     private static final String SPLIT_REGEX = "&";
 
     private final String body;
 
-    public HttpRequestBody(String body) {
+    public RequestBody(String body) {
         this.body = body;
     }
-
 
     public String[] extractUser() {
         String bodyValue = body.replaceAll(REPLACE_ID, EMPTY);

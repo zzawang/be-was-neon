@@ -1,5 +1,7 @@
 package http.response;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Optional;
 
 public class ResponseHeaders {
@@ -7,6 +9,11 @@ public class ResponseHeaders {
     private ContentType contentType;
     private String location;
     private String cookie;
+    private final Map<String, String> headers;
+
+    public ResponseHeaders() {
+        this.headers = new LinkedHashMap<>();
+    }
 
     public Integer getContentLength() {
         return contentLength;

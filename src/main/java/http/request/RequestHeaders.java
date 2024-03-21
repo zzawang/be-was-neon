@@ -13,12 +13,11 @@ public class RequestHeaders {
 
     private final Map<String, String> headers;
 
-    public RequestHeaders(String headers) {
+    public RequestHeaders() {
         this.headers = new LinkedHashMap<>();
-        initHeaders(headers);
     }
 
-    private void initHeaders(String headers) {
+    public void setHeaders(String headers) {
         String[] header = headers.split(LINE_FEED);
         for (String line : header) {
             String[] keyNValue = line.split(HEADER_DELIMITER, HEADER_DELIMITER_LIMIT_COUNT);
