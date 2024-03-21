@@ -1,4 +1,4 @@
-package http;
+package utils;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -8,7 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import utils.FileReader;
 
 class FileReaderTest {
     @DisplayName("파일을 읽어 바이트 배열을 생성할 수 있다.")
