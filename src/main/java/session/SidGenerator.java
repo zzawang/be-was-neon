@@ -28,4 +28,8 @@ public class SidGenerator {
         }
         return sb.toString();
     }
+
+    public boolean containsSid(String sid) {
+        return sessionIds.contains(sid);
+    }
 }

@@ -1,6 +1,9 @@
 package utils;
 
 public class Constant {
+    private Constant() {
+    }
+
     public static final String CRLF = "\r\n";
     public static final String BLANK = "\s+";
     public static final String LINE_FEED = "\n";
@@ -11,6 +14,7 @@ public class Constant {
     public static final String BASE_DIRECTORY_PATH = "src/main/resources/static";
     public static final String BASE_PATH = "/";
     public static final String BASE_HTML = "/index.html";
+    public static final String AUTHORIZED_BASE_PATH = "/main";
     public static final String ARTICLE_PATH = "/article";
     public static final String ARTICLE_HTML = "/article.html";
     public static final String COMMENT_PATH = "/comment";
