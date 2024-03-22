@@ -33,12 +33,20 @@ public class Request {
         this.body = new RequestBody(line);
     }
 
+    public void setFilePath(String validFile) {
+        this.filePath.setFilePathUrl(validFile);
+    }
+
     public Method getMethod() {
         return method;
     }
 
     public FilePath getFilePath() {
         return filePath;
+    }
+
+    public Optional<String> getCookie() {
+        return Optional.ofNullable(requestHeaders.findHeader("Cookie"));
     }
 
     public Optional<String> getContentLength() {

@@ -10,6 +10,7 @@ import http.request.Method;
 import http.request.Method.HttpMethod;
 import http.response.Status;
 import java.io.FileNotFoundException;
+import session.SessionManager;
 
 public class RequestRouter {
     private final RequestManager requestManager;
@@ -21,12 +22,26 @@ public class RequestRouter {
     }
 
     public void processRequest() throws FileNotFoundException {
-        if (!requestManager.isOk()) {
-            Status status = requestManager.getStatus();
-            responseManager.setErrorResponse(status);
+        try {
+            if (!requestManager.isOk()) {
+                Status status = requestManager.getStatus();
+                responseManager.setErrorResponse(status);
+                return;
+            }
+            validateUser();
+            executeRequest();
+        } catch (FileNotFoundException e) {
+            responseManager.setErrorResponse(Status.NOT_FOUND);
+        }
+    }
+
+    private void validateUser() throws FileNotFoundException {
+        SessionManager sessionManager = new SessionManager(requestManager);
+        if (sessionManager.isAuthorizedUser()) {
+            requestManager.verifyUserFilePath();
             return;
         }
-        executeRequest();
+        requestManager.verifyUnknownFilePath();
     }
 
     private void executeRequest() throws FileNotFoundException {

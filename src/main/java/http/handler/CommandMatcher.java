@@ -6,7 +6,8 @@ import java.util.Arrays;
 public class CommandMatcher {
     public enum Command {
         USER_CREATE("/user/create", new UserCreateHandler()),
-        USER_LOGIN("/user/login", new UserLoginHandler());
+        USER_LOGIN("/user/login", new UserLoginHandler()),
+        USER_LOGOUT("/user/logout", new UserLogoutHandler());
 
         public final String filePath;
         public final CommandHandler commandHandler;

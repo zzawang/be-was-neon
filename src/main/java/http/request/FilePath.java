@@ -7,7 +7,7 @@ import utils.DirectoryMatcher;
 
 public class FilePath {
     public static final String IS_INVALID_FILE_PATH = "올바른 파일이 아닙니다.";
-    private final String filePathUrl;
+    private String filePathUrl;
 
     public FilePath(String filePathUrl) throws FileNotFoundException {
         filePathUrl = filePathUrl.trim();
@@ -29,6 +29,10 @@ public class FilePath {
     public boolean isValidFilePath(String filePath) {
         File file = new File(filePath);
         return file.isFile() && file.exists();
+    }
+
+    public void setFilePathUrl(String filePathUrl) {
+        this.filePathUrl = filePathUrl;
     }
 
     public String getFilePathUrl() {

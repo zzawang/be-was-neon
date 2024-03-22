@@ -2,12 +2,10 @@ package http.handler;
 
 import static utils.Constant.BASE_PATH;
 
-import db.UserDatabase;
 import http.response.Status;
-import model.User;
-import utils.UserGenerator;
+import session.SessionManager;
 
-public class UserCreateHandler extends CommandHandler {
+public class UserLogoutHandler extends CommandHandler {
     @Override
     public void handleGetRequest() {
         responseManager.setErrorResponse(Status.BAD_REQUEST);
@@ -15,9 +13,8 @@ public class UserCreateHandler extends CommandHandler {
 
     @Override
     public void handlePostRequest() {
-        UserGenerator userGenerator = new UserGenerator(requestManager);
-        User user = userGenerator.createUser();
-        UserDatabase.addUser(user);
+        SessionManager sessionManager = new SessionManager(requestManager);
+        sessionManager.expireSession();
         responseManager.setRedirectResponse(BASE_PATH);
     }
 

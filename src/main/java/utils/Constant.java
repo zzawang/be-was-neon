@@ -25,5 +25,4 @@ public class Constant {
     public static final String LOGIN_HTML = "/login.html";
     public static final String LOGIN_FAILED_PATH = "/login_failed";
     public static final String LOGIN_FAIL_HTML = "/login_failed.html";
-    public static final String COOKIE_SETTING_FORMAT = "sid=%s; Path=%s";
 }

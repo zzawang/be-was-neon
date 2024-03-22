@@ -14,8 +14,10 @@ import java.io.IOException;
 import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import utils.DirectoryMatcher;
 
 public class RequestManager {
+    private static final String SID_EXTRACT_DELIMITER = "sid=";
     private static final int METHOD_INDEX = 0;
     private static final int FILE_PATH_INDEX = 1;
     private static final int VERSION_INDEX = 2;
@@ -123,11 +125,32 @@ public class RequestManager {
         return status;
     }
 
+    public Optional<String> getCookie() {
+        return request.getCookie();
+    }
+
     public String[] extractUser() {
         return request.extractUser();
     }
 
     public boolean isOk() {
         return status.equals(Status.OK);
+    }
+
+    public void verifyUserFilePath() {
+        String file = request.getFilePath().getFilePathUrl();
+        String validFile = DirectoryMatcher.matchUserEndPoint(file);
+        request.setFilePath(validFile);
+    }
+
+    public void verifyUnknownFilePath() {
+        String file = request.getFilePath().getFilePathUrl();
+        String validFile = DirectoryMatcher.matchUnknownEndPoint(file);
+        request.setFilePath(validFile);
+    }
+
+    public String getSid() {
+        String cookie = getCookie().get();
+        return cookie.replaceAll(SID_EXTRACT_DELIMITER, EMPTY);
     }
 }
