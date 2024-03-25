@@ -27,4 +27,5 @@ public class Constant {
     public static final String LOGIN_FAIL_HTML = "/login_failed.html";
     public static final String USER_PATH = "/user";
     public static final String LIST_PATH = "/list";
+    public static final String LIST_HTML = "/list.html";
 }
