@@ -137,15 +137,9 @@ public class RequestManager {
         return status.equals(Status.OK);
     }
 
-    public void verifyUserFilePath() {
-        String file = request.getFilePath().getFilePathUrl();
+    public void changeUserFilePath() {
+        String file = request.getFilePath().getFilePath();
         String validFile = DirectoryMatcher.matchUserEndPoint(file);
-        request.setFilePath(validFile);
-    }
-
-    public void verifyUnknownFilePath() {
-        String file = request.getFilePath().getFilePathUrl();
-        String validFile = DirectoryMatcher.matchUnknownEndPoint(file);
         request.setFilePath(validFile);
     }
 

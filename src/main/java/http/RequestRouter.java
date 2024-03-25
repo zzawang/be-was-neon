@@ -38,10 +38,8 @@ public class RequestRouter {
     private void validateUser() throws FileNotFoundException {
         SessionManager sessionManager = new SessionManager(requestManager);
         if (sessionManager.isAuthorizedUser()) {
-            requestManager.verifyUserFilePath();
-            return;
+            requestManager.changeUserFilePath();
         }
-        requestManager.verifyUnknownFilePath();
     }
 
     private void executeRequest() throws FileNotFoundException {

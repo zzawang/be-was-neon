@@ -7,19 +7,20 @@ import utils.DirectoryMatcher;
 
 public class FilePath {
     public static final String IS_INVALID_FILE_PATH = "올바른 파일이 아닙니다.";
+    private String filePath;
     private String filePathUrl;
 
-    public FilePath(String filePathUrl) throws FileNotFoundException {
-        filePathUrl = filePathUrl.trim();
-        String absoluteFilePathUrl = DirectoryMatcher.mathDirectory(filePathUrl);
-        if (!isValidFilePath(absoluteFilePathUrl) && !CommandMatcher.isValidCommand(filePathUrl)) {
+    public FilePath(String file) throws FileNotFoundException {
+        this.filePath = file.trim();
+        String absoluteFilePathUrl = DirectoryMatcher.matchUnknownEndPoint(filePath);
+        if (!isValidFilePath(absoluteFilePathUrl) && !CommandMatcher.isValidCommand(filePath)) {
             throw new FileNotFoundException(IS_INVALID_FILE_PATH);
         }
-        this.filePathUrl = setFilePath(filePathUrl);
+        this.filePathUrl = setFilePath(filePath);
     }
 
     private String setFilePath(String filePathUrl) {
-        String absoluteFilePathUrl = DirectoryMatcher.mathDirectory(filePathUrl);
+        String absoluteFilePathUrl = DirectoryMatcher.matchUnknownEndPoint(filePathUrl);
         if (isValidFilePath(absoluteFilePathUrl)) {
             return absoluteFilePathUrl;
         }
@@ -33,6 +34,10 @@ public class FilePath {
 
     public void setFilePathUrl(String filePathUrl) {
         this.filePathUrl = filePathUrl;
+    }
+
+    public String getFilePath() {
+        return filePath;
     }
 
     public String getFilePathUrl() {
