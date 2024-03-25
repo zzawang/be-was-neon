@@ -4,6 +4,7 @@ import static utils.Constant.BLANK;
 import static utils.Constant.EMPTY;
 import static utils.Constant.LINE_FEED;
 
+import http.handler.CommandMatcher;
 import http.request.FilePath;
 import http.request.Method;
 import http.request.Request;
@@ -138,9 +139,11 @@ public class RequestManager {
     }
 
     public void changeUserFilePath() {
-        String file = request.getFilePath().getFilePath();
-        String validFile = DirectoryMatcher.matchUserEndPoint(file);
-        request.setFilePath(validFile);
+        String filePath = request.getFilePath().getFilePath();
+        if (!CommandMatcher.isValidCommand(filePath)) {
+            String validFile = DirectoryMatcher.matchUserEndPoint(filePath);
+            request.setFilePath(validFile);
+        }
     }
 
     public String getSid() {
