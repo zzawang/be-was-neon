@@ -8,15 +8,12 @@ import static utils.Constant.BASE_HTML;
 import static utils.Constant.BASE_PATH;
 import static utils.Constant.COMMENT_HTML;
 import static utils.Constant.COMMENT_PATH;
-import static utils.Constant.LIST_HTML;
-import static utils.Constant.LIST_PATH;
 import static utils.Constant.LOGIN_FAILED_PATH;
 import static utils.Constant.LOGIN_FAIL_HTML;
 import static utils.Constant.LOGIN_HTML;
 import static utils.Constant.LOGIN_PATH;
 import static utils.Constant.REGISTRATION_HTML;
 import static utils.Constant.REGISTRATION_PATH;
-import static utils.Constant.USER_PATH;
 
 import http.response.Status;
 import java.util.List;
@@ -30,7 +27,6 @@ public class DirectoryMatcher {
         LOGIN(Status.BAD_REQUEST, AUTHORIZED_BASE_PATH + BASE_HTML, List.of(LOGIN_PATH, LOGIN_PATH + LOGIN_HTML)),
         LOGIN_FAILED(Status.BAD_REQUEST, AUTHORIZED_BASE_PATH + BASE_HTML,
                 List.of(LOGIN_FAILED_PATH, LOGIN_FAILED_PATH + LOGIN_FAIL_HTML)),
-        USER_LIST(Status.OK, USER_PATH + LIST_HTML, List.of(USER_PATH + LIST_PATH)),
         ARTICLE(Status.OK, ARTICLE_PATH + ARTICLE_HTML, List.of(ARTICLE_PATH, ARTICLE_PATH + ARTICLE_HTML)),
         COMMENT(Status.OK, COMMENT_PATH + COMMENT_HTML, List.of(COMMENT_PATH, COMMENT_PATH + COMMENT_HTML));
 
@@ -56,7 +52,6 @@ public class DirectoryMatcher {
         LOGIN(Status.OK, LOGIN_PATH + LOGIN_HTML, List.of(LOGIN_PATH, LOGIN_PATH + LOGIN_HTML)),
         LOGIN_FAILED(Status.REDIRECT, LOGIN_PATH + LOGIN_FAIL_HTML,
                 List.of(LOGIN_FAILED_PATH, LOGIN_FAILED_PATH + LOGIN_FAIL_HTML)),
-        USER_LIST(Status.REDIRECT, LOGIN_PATH + LOGIN_HTML, List.of(USER_PATH + LIST_PATH)),
         ARTICLE(Status.REDIRECT, LOGIN_PATH + LOGIN_HTML, List.of(ARTICLE_PATH, ARTICLE_PATH + ARTICLE_HTML)),
         COMMENT(Status.REDIRECT, LOGIN_PATH + LOGIN_HTML, List.of(COMMENT_PATH, COMMENT_PATH + COMMENT_HTML));
         private final Status status;
