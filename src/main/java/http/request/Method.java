@@ -1,48 +1,49 @@
 package http.request;
 
-import static utils.Constant.IS_INVALID_HTTP_METHOD;
-
-import http.HttpRequestRouter;
+import http.handler.CommandHandler;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class Method {
     public enum HttpMethod {
-        GET(HttpRequestRouter::processGETMethod),
-        POST(HttpRequestRouter::processPOSTMethod),
-        PUT(HttpRequestRouter::processPUTMethod),
-        DELETE(HttpRequestRouter::processDELETEMethod),
-        HEAD(HttpRequestRouter::processHEADMethod),
-        CONNECT(HttpRequestRouter::processCONNECTMethod),
-        TRACE(HttpRequestRouter::processTRACEMethod),
-        PATCH(HttpRequestRouter::processPATCHMethod);
+        GET(CommandHandler::handleGetRequest),
+        POST(CommandHandler::handlePostRequest),
+        PUT(CommandHandler::handlePutRequest),
+        DELETE(CommandHandler::handleDeleteRequest),
+        HEAD(CommandHandler::handleHeadRequest),
+        CONNECT(CommandHandler::handleConnectRequest),
+        TRACE(CommandHandler::handleTraceRequest),
+        PATCH(CommandHandler::handlePatchRequest);
 
-        private final Consumer<HttpRequestRouter> function;
+        private final Consumer<CommandHandler> function;
 
-        HttpMethod(Consumer<HttpRequestRouter> function) {
+        HttpMethod(Consumer<CommandHandler> function) {
             this.function = function;
         }
 
-        public void execute(HttpRequestRouter httpRequestRouter) {
-            function.accept(httpRequestRouter);
+        public void execute(CommandHandler commandHandler) {
+            function.accept(commandHandler);
         }
     }
 
+    private static final String IS_INVALID_HTTP_METHOD = "올바른 HTTP Method가 아닙니다.";
+
     private final String method;
 
-    public Method(String method) {
+    public Method(String methodCommand) {
+        String method = methodCommand.toUpperCase();
         if (!isValidMethod(method)) {
-            throw new IllegalArgumentException(IS_INVALID_HTTP_METHOD);
+            throw new IllegalStateException(IS_INVALID_HTTP_METHOD);
         }
         this.method = method;
     }
 
     private boolean isValidMethod(String method) {
         return Arrays.stream(HttpMethod.values())
-                .anyMatch(httpMethod -> httpMethod.name().equals(method.toUpperCase()));
+                .anyMatch(httpMethod -> httpMethod.name().equals(method));
     }
 
-    public String getMethod() {
+    public String getMethodCommand() {
         return method;
     }
 }

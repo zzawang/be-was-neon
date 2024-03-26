@@ -1,0 +1,67 @@
+package http.handler;
+
+import static utils.Constant.AUTHORIZED_BASE_PATH;
+import static utils.Constant.BASE_PATH;
+import static utils.Constant.LOGIN_FAILED_PATH;
+
+import db.UserDatabase;
+import http.response.Status;
+import model.User;
+import session.SessionManager;
+import session.SidGenerator;
+import utils.UserGenerator;
+
+public class UserLoginHandler extends CommandHandler {
+    private static final String COOKIE_SETTING_FORMAT = "sid=%s; Path=%s; Max-Age=3600";
+
+    @Override
+    public void handleGetRequest() {
+        responseManager.setErrorResponse(Status.BAD_REQUEST);
+    }
+
+    @Override
+    public void handlePostRequest() {
+        UserGenerator userGenerator = new UserGenerator(requestManager);
+        User user = userGenerator.createUser();
+        User matchedUser = UserDatabase.findUserById(user.getId());
+
+        if (user.matchUser(matchedUser)) {
+            String sid = SidGenerator.generate();
+            SessionManager.setSession(sid, user.getId());
+            responseManager.setRedirectResponse(AUTHORIZED_BASE_PATH);
+            responseManager.setCookie(String.format(COOKIE_SETTING_FORMAT, sid, BASE_PATH));
+            return;
+        }
+        responseManager.setRedirectResponse(LOGIN_FAILED_PATH);
+    }
+
+    @Override
+    public void handlePutRequest() {
+        responseManager.setErrorResponse(Status.BAD_REQUEST);
+    }
+
+    @Override
+    public void handleDeleteRequest() {
+        responseManager.setErrorResponse(Status.BAD_REQUEST);
+    }
+
+    @Override
+    public void handleHeadRequest() {
+        responseManager.setErrorResponse(Status.BAD_REQUEST);
+    }
+
+    @Override
+    public void handleConnectRequest() {
+        responseManager.setErrorResponse(Status.BAD_REQUEST);
+    }
+
+    @Override
+    public void handleTraceRequest() {
+        responseManager.setErrorResponse(Status.BAD_REQUEST);
+    }
+
+    @Override
+    public void handlePatchRequest() {
+        responseManager.setErrorResponse(Status.BAD_REQUEST);
+    }
+}

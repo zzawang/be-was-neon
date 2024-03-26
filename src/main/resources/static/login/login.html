@@ -1,56 +1,78 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link href="../reset.css" rel="stylesheet" />
-    <link href="../global.css" rel="stylesheet" />
-  </head>
-  <body>
-    <div class="container">
-      <header class="header">
-        <a href="/"><img src="../img/signiture.svg" /></a>
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="../reset.css" rel="stylesheet"/>
+    <link href="../global.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <a href="/"><img src="/img/signiture.svg"/></a>
         <ul class="header__menu">
-          <li class="header__menu__item">
-            <a class="btn btn_contained btn_size_s" href="/login/login.html">로그인</a>
-          </li>
-          <li class="header__menu__item">
-            <a class="btn btn_ghost btn_size_s" href="/registration/register.html">
-              회원 가입
-            </a>
-          </li>
+            <li class="header__menu__item">
+                <a class="btn btn_contained btn_size_s" href="/login">로그인</a>
+            </li>
+            <li class="header__menu__item">
+                <a class="btn btn_ghost btn_size_s" href="/registration">
+                    회원 가입
+                </a>
+            </li>
         </ul>
-      </header>
-      <div class="page">
+    </header>
+    <div class="page">
         <h2 class="page-title">로그인</h2>
-        <form class="form">
-          <div class="textfield textfield_size_s">
-            <p class="title_textfield">아이디</p>
-            <input
-              class="input_textfield"
-              placeholder="아이디를 입력해주세요"
-              autocomplete="username"
-            />
-          </div>
-          <div class="textfield textfield_size_s">
-            <p class="title_textfield">비밀번호</p>
-            <input
-              class="input_textfield"
-              type="password"
-              placeholder="비밀번호를 입력해주세요"
-              autocomplete="current-password"
-            />
-          </div>
-          <button
-            id="login-btn"
-            class="btn btn_contained btn_size_m"
-            style="margin-top: 24px"
-            type="button"
-          >
-            로그인
-          </button>
+        <form class="form" id="loginForm" onsubmit="return validateForm()" action="/user/login" method="post">
+            <div class="textfield textfield_size_s">
+                <p class="title_textfield">아이디</p>
+                <input
+                        class="input_textfield"
+                        id="userId"
+                        name="userId"
+                        placeholder="아이디를 입력해주세요 (영어와 숫자만 가능)"
+                        autocomplete="username"
+                />
+            </div>
+            <div class="textfield textfield_size_s">
+                <p class="title_textfield">비밀번호</p>
+                <input
+                        class="input_textfield"
+                        type="password"
+                        id="userPw"
+                        name="userPw"
+                        placeholder="비밀번호를 입력해주세요 (8자 이상)"
+                        autocomplete="current-password"
+                />
+            </div>
+            <button
+                    id="login-btn"
+                    class="btn btn_contained btn_size_m"
+                    style="margin-top: 24px"
+                    type="submit"
+            >
+                로그인
+            </button>
         </form>
-      </div>
     </div>
-  </body>
+</div>
+
+<script>
+    function validateForm() {
+        var userId = document.getElementById("userId").value;
+        var nameRegex = /^[a-zA-Z0-9]+$/;
+        if (!nameRegex.test(userId)) { // 아이디가 영어와 숫자로만 되어 있는지 검증한다.
+            alert("아이디는 영어와 숫자만 입력할 수 있습니다.");
+            return false;
+        }
+
+        var userPw = document.getElementById("userPw").value;
+        if (userPw.length < 8) { // 비밀번호가 8자 이상인지 검증한다.
+            alert("비밀번호는 8자 이상이어야 합니다.");
+            return false;
+        }
+        return true; // 모든 유효성 검사를 통과
+    }
+</script>
+</body>
 </html>
