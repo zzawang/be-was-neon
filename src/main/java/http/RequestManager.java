@@ -1,34 +1,41 @@
 package http;
 
 import static utils.Constant.BLANK;
+import static utils.Constant.CRLF;
 import static utils.Constant.EMPTY;
 import static utils.Constant.LINE_FEED;
 
-import http.handler.CommandMatcher;
+import db.ArticleDatabase;
 import http.request.FilePath;
 import http.request.Method;
 import http.request.Request;
 import http.response.Status;
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
+import model.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.DirectoryMatcher;
+import session.SessionManager;
+import utils.ArticleGenerator;
 
 public class RequestManager {
+    private static final Logger logger = LoggerFactory.getLogger(RequestManager.class);
+    private static final String FORM_DATA_REGEX = "^multipart/form-data;\s*boundary=----WebKitFormBoundary.+$";
     private static final String SID_EXTRACT_DELIMITER = "sid=";
+    private static final String QUERY_STR = "?";
+    private static final String QUERY_REGEX = "\\?";
     private static final int METHOD_INDEX = 0;
     private static final int FILE_PATH_INDEX = 1;
     private static final int VERSION_INDEX = 2;
-    private static final Logger logger = LoggerFactory.getLogger(RequestManager.class);
-    private final BufferedReader br;
+    private final BufferedInputStream bis;
     private final Request request;
     private Status status; // request 상태 판별용
 
-    public RequestManager(BufferedReader br) throws IOException {
-        this.br = br;
+    public RequestManager(BufferedInputStream bis) throws IOException {
+        this.bis = bis;
         this.request = new Request();
         this.status = Status.OK;
     }
@@ -50,15 +57,24 @@ public class RequestManager {
         String firstLine = getFirstLine();
         String[] lines = firstLine.split(BLANK);
         Method method = new Method(lines[METHOD_INDEX]);
-        FilePath filePath = new FilePath(lines[FILE_PATH_INDEX]);
+        FilePath filePath = extractQuery(lines[FILE_PATH_INDEX]);
         Version version = new Version(lines[VERSION_INDEX]);
         request.setFirstLine(method, filePath, version);
     }
 
+    private FilePath extractQuery(String line) throws FileNotFoundException {
+        if (line.contains(QUERY_STR)) {
+            String[] lines = line.split(QUERY_REGEX, 2);
+            request.setQuery(lines[1]);
+            return new FilePath(lines[0]);
+        }
+        return new FilePath(line);
+    }
+
     private String getFirstLine() throws IOException {
-        String request = br.readLine();
+        String request = readLine();
         logger.info(request);
-        if (request == null) {
+        if (request.equals(EMPTY)) {
             throw new IOException();
         }
         return request;
@@ -72,46 +88,63 @@ public class RequestManager {
     private String getRequestHeaders() throws IOException {
         StringBuilder headers = new StringBuilder();
         String request;
-        while (!(request = br.readLine()).equals(EMPTY)) {
+        while (!(request = readLine()).equals(EMPTY)) {
             headers.append(request).append(LINE_FEED);
         }
         return headers.toString();
     }
 
     private void setRequestBody() throws IOException, NumberFormatException {
-        if (isBodyPresent()) {
-            int contentLength = getContentLength();
-            String body = getRequestBody(contentLength);
+        Optional<String> contentLengthHeader = request.getContentLength();
+        if (contentLengthHeader.isPresent()) {
+            int contentLength = Integer.parseInt(request.getContentLength().get().trim());
+            byte[] body = getRequestBody(contentLength);
             request.setBody(body);
         }
     }
 
-    private boolean isBodyPresent() {
-        Optional<String> contentLengthHeader = request.getContentLength();
-        if (contentLengthHeader.isEmpty()) {
-            return false;
+    private byte[] getRequestBody(int contentLength) throws IOException {
+        byte[] body = getRequestBodyToBytes(contentLength);
+
+        if (isFormData()) {
+            SessionManager sessionManager = new SessionManager(this);
+            String userName = sessionManager.getUserName();
+            Article article = ArticleGenerator.generateArticle(body, userName);
+            ArticleDatabase.addArticle(article);
+            logger.info(article.toString());
         }
-        return true;
+        return body;
     }
 
-    private int getContentLength() {
-        int contentLength;
-        String contentLengthHeader = request.getContentLength().get();
-        contentLength = Integer.parseInt(contentLengthHeader.trim());
-        return contentLength;
+    private boolean isFormData() {
+        String contentType = request.getContentType();
+        return contentType.matches(FORM_DATA_REGEX);
     }
 
-    private String getRequestBody(int contentLength) throws IOException {
-        StringBuilder body = new StringBuilder();
-        char[] buffer = new char[1024];
+    private byte[] getRequestBodyToBytes(int contentLength) throws IOException {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] buffer = new byte[1024];
         int bytesRead;
         int totalBytesRead = 0;
         while (totalBytesRead < contentLength
-                && (bytesRead = br.read(buffer, 0, Math.min(buffer.length, contentLength - totalBytesRead))) != -1) {
-            body.append(buffer, 0, bytesRead);
+                && (bytesRead = bis.read(buffer, 0, Math.min(buffer.length, contentLength - totalBytesRead))) != -1) {
+            baos.write(buffer, 0, bytesRead);
             totalBytesRead += bytesRead;
         }
-        return body.toString();
+        return baos.toByteArray();
+    }
+
+    private String readLine() throws IOException {
+        StringBuilder sb = new StringBuilder();
+        int bytes;
+        while ((bytes = bis.read()) != -1) {
+            char data = (char) bytes;
+            sb.append(data);
+            if (data == '\n') {
+                break;
+            }
+        }
+        return sb.toString().replaceAll(CRLF, "");
     }
 
     public Method getMethod() {
@@ -120,6 +153,10 @@ public class RequestManager {
 
     public FilePath getFilePath() {
         return request.getFilePath();
+    }
+
+    public Optional<String> getQuery() {
+        return request.getQuery();
     }
 
     public Status getStatus() {
@@ -136,14 +173,6 @@ public class RequestManager {
 
     public boolean isOk() {
         return status.equals(Status.OK);
-    }
-
-    public void changeUserFilePath() {
-        String filePath = request.getFilePath().getFilePath();
-        if (!CommandMatcher.isValidCommand(filePath)) {
-            String validFile = DirectoryMatcher.matchUserEndPoint(filePath);
-            request.setFilePath(validFile);
-        }
     }
 
     public String getSid() {

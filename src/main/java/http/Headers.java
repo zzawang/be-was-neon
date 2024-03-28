@@ -24,7 +24,7 @@ public class Headers {
         String[] header = headers.split(LINE_FEED);
         for (String line : header) {
             String[] keyNValue = line.split(HEADER_DELIMITER, HEADER_DELIMITER_LIMIT_COUNT);
-            this.headers.put(keyNValue[KEY_INDEX], keyNValue[VALUE_INDEX]);
+            this.headers.put(keyNValue[KEY_INDEX], keyNValue[VALUE_INDEX].trim());
         }
     }
 

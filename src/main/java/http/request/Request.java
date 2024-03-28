@@ -15,6 +15,7 @@ public class Request {
     private Method method;
     private FilePath filePath;
     private Version version;
+    private String query;
     private Headers requestHeaders;
     private RequestBody body;
 
@@ -24,17 +25,17 @@ public class Request {
         this.version = version;
     }
 
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
     public void setRequestHeaders(String line) {
         this.requestHeaders = new Headers();
         this.requestHeaders.setHeaders(line);
     }
 
-    public void setBody(String line) {
-        this.body = new RequestBody(line);
-    }
-
-    public void setFilePath(String validFile) {
-        this.filePath.setFilePathUrl(validFile);
+    public void setBody(byte[] body) {
+        this.body = new RequestBody(body);
     }
 
     public Method getMethod() {
@@ -43,6 +44,10 @@ public class Request {
 
     public FilePath getFilePath() {
         return filePath;
+    }
+
+    public Optional<String> getQuery() {
+        return Optional.ofNullable(query);
     }
 
     public Optional<String> getCookie() {
@@ -74,5 +79,9 @@ public class Request {
 
     private String generateFirstLinePhrase() {
         return String.format(FIRST_LINE, method.getMethodCommand(), filePath.getFilePathUrl(), version.getVersion());
+    }
+
+    public String getContentType() {
+        return requestHeaders.findHeader("Content-Type");
     }
 }

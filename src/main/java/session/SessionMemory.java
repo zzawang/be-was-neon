@@ -7,19 +7,19 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionMemory {
     private static Map<String, String> sessions = new ConcurrentHashMap<>();
 
-    public static void addSession(String sid, String userId) {
-        sessions.put(sid, userId);
+    public static void addSession(String sid, String userName) {
+        sessions.put(sid, userName);
     }
 
     public static boolean findSessionId(String sid) {
         return sessions.containsKey(sid);
     }
 
-    public static String findUserIdBySid(String sid) {
+    public static String findUserNameBySid(String sid) {
         return sessions.get(sid);
     }
 
-    public static Collection<String> findAllUserId() {
+    public static Collection<String> findAllUserName() {
         return sessions.values();
     }
 

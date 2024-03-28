@@ -1,14 +1,10 @@
 package webserver;
 
-import static utils.Constant.CHARSETS;
-
 import http.RequestManager;
 import http.RequestRouter;
 import http.ResponseManager;
-import java.io.BufferedReader;
+import java.io.BufferedInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.Socket;
 import org.slf4j.Logger;
@@ -27,11 +23,10 @@ public class RequestHandler implements Runnable {
     public void run() {
         logger.debug(NEW_CLIENT_CONNECT_MESSAGE, connection.getInetAddress(), connection.getPort());
 
-        try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            InputStreamReader inputStreamReader = new InputStreamReader(in, CHARSETS);
-            BufferedReader br = new BufferedReader(inputStreamReader);
+        try (BufferedInputStream bis = new BufferedInputStream(connection.getInputStream());
+             OutputStream out = connection.getOutputStream()) {
 
-            RequestManager requestManager = new RequestManager(br);
+            RequestManager requestManager = new RequestManager(bis);
             requestManager.setRequest();
             ResponseManager responseManager = new ResponseManager();
 

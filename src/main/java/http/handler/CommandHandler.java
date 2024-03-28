@@ -4,17 +4,22 @@ import static utils.Constant.CONTENT_TYPE_DELIMITER;
 
 import http.RequestManager;
 import http.ResponseManager;
-import http.request.FilePath;
 import http.response.ContentType;
 import http.response.Status;
+import java.io.File;
+import session.SessionManager;
+import utils.DirectoryMatcher;
+import utils.StaticFileReader;
 
 public abstract class CommandHandler {
     protected RequestManager requestManager;
     protected ResponseManager responseManager;
+    protected SessionManager sessionManager;
 
     public void setManagers(RequestManager requestManager, ResponseManager responseManager) {
         this.requestManager = requestManager;
         this.responseManager = responseManager;
+        this.sessionManager = new SessionManager(requestManager);
     }
 
     public void handleGetRequest() {
@@ -49,8 +54,22 @@ public abstract class CommandHandler {
         responseManager.setErrorResponse(Status.BAD_REQUEST);
     }
 
-    protected ContentType getContentType(FilePath filePath) {
-        String[] parts = filePath.getFilePathUrl().split(CONTENT_TYPE_DELIMITER);
+    protected void serveHtmlFileFromDirectory(String path) {
+        String filePathUrl = DirectoryMatcher.matchDirectory(path);
+        StaticFileReader staticFileReader = generateStaticFileReader(path);
+        byte[] responseBody = staticFileReader.readAllBytes();
+        ContentType contentType = getContentType(filePathUrl);
+        responseManager.setOkResponse(contentType, responseBody);
+    }
+
+    protected StaticFileReader generateStaticFileReader(String path) {
+        String filePathUrl = DirectoryMatcher.matchDirectory(path);
+        File file = new File(filePathUrl);
+        return new StaticFileReader(file);
+    }
+
+    protected ContentType getContentType(String filePathUrl) {
+        String[] parts = filePathUrl.split(CONTENT_TYPE_DELIMITER);
         String type = parts[parts.length - 1];
 
         for (ContentType contentType : ContentType.values()) {

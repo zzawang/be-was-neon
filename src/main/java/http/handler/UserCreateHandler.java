@@ -1,16 +1,21 @@
 package http.handler;
 
+import static utils.Constant.AUTHORIZED_BASE_PATH;
 import static utils.Constant.BASE_PATH;
+import static utils.Constant.REGISTRATION_PATH;
 
 import db.UserDatabase;
-import http.response.Status;
 import model.User;
 import utils.UserGenerator;
 
 public class UserCreateHandler extends CommandHandler {
     @Override
     public void handleGetRequest() {
-        responseManager.setErrorResponse(Status.BAD_REQUEST);
+        if (sessionManager.isAuthorizedUser()) {
+            responseManager.setRedirectResponse(AUTHORIZED_BASE_PATH);
+            return;
+        }
+        serveHtmlFileFromDirectory(REGISTRATION_PATH);
     }
 
     @Override

@@ -5,9 +5,13 @@ import java.util.Arrays;
 
 public class CommandMatcher {
     public enum Command {
-        USER_CREATE("/user/create", new UserCreateHandler()),
-        USER_LOGIN("/user/login", new UserLoginHandler()),
-        USER_LOGOUT("/user/logout", new UserLogoutHandler()),
+        HOME("/", new HomeHandler()),
+        USER_HOME("/main", new UserHomeHandler()),
+        USER_ARTICLE("/article", new UserArticleHandler()),
+        USER_COMMENT("/comment", new UserCommentHandler()),
+        USER_CREATE("/registration", new UserCreateHandler()),
+        USER_LOGIN("/login", new UserLoginHandler()),
+        USER_LOGOUT("/logout", new UserLogoutHandler()),
         USER_LIST("/user/list", new UserListHandler());
 
         public final String filePath;

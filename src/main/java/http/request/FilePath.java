@@ -3,6 +3,7 @@ package http.request;
 import http.handler.CommandMatcher;
 import java.io.File;
 import java.io.FileNotFoundException;
+import utils.Decoder;
 import utils.DirectoryMatcher;
 
 public class FilePath {
@@ -12,28 +13,17 @@ public class FilePath {
 
     public FilePath(String file) throws FileNotFoundException {
         this.filePath = file.trim();
-        String absoluteFilePathUrl = DirectoryMatcher.matchUnknownEndPoint(filePath);
-        if (!isValidFilePath(absoluteFilePathUrl) && !CommandMatcher.isValidCommand(filePath)) {
+        String absoluteFilePathUrl = DirectoryMatcher.matchDirectory(filePath);
+        if (!CommandMatcher.isValidCommand(filePath) && !isValidFilePath(absoluteFilePathUrl)) {
             throw new FileNotFoundException(IS_INVALID_FILE_PATH);
         }
-        this.filePathUrl = setFilePath(filePath);
-    }
-
-    private String setFilePath(String filePathUrl) {
-        String absoluteFilePathUrl = DirectoryMatcher.matchUnknownEndPoint(filePathUrl);
-        if (isValidFilePath(absoluteFilePathUrl)) {
-            return absoluteFilePathUrl;
-        }
-        return filePathUrl;
+        this.filePathUrl = filePath;
     }
 
     public boolean isValidFilePath(String filePath) {
+        filePath = Decoder.decodeStr(filePath);
         File file = new File(filePath);
         return file.isFile() && file.exists();
-    }
-
-    public void setFilePathUrl(String filePathUrl) {
-        this.filePathUrl = filePathUrl;
     }
 
     public String getFilePath() {
@@ -42,9 +32,5 @@ public class FilePath {
 
     public String getFilePathUrl() {
         return filePathUrl;
-    }
-
-    public File makeFile() {
-        return new File(filePathUrl);
     }
 }

@@ -29,15 +29,13 @@ public class SessionManager {
 
     public String getUserName() {
         String sid = requestManager.getSid();
-        String userId = SessionMemory.findUserIdBySid(sid);
-        User user = UserDatabase.findUserById(userId);
-        return user.getName();
+        return SessionMemory.findUserNameBySid(sid);
     }
 
     public List<User> getUsers() {
-        Collection<String> allUserId = SessionMemory.findAllUserId();
+        Collection<String> allUserName = SessionMemory.findAllUserName();
         List<User> users = new ArrayList<>();
-        allUserId.forEach(userID -> users.add(UserDatabase.findUserById(userID)));
+        allUserName.forEach(userName -> users.add(UserDatabase.findUserByName(userName)));
 
         return users;
     }
@@ -47,8 +45,8 @@ public class SessionManager {
         SessionMemory.removeSession(sid);
     }
 
-    public static void setSession(String sid, String userId) {
-        SessionMemory.addSession(sid, userId);
+    public static void setSession(String sid, String userName) {
+        SessionMemory.addSession(sid, userName);
     }
 
     public static boolean isSessionIdExists(String sid) {

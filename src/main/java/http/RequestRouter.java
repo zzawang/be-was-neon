@@ -10,7 +10,7 @@ import http.request.Method;
 import http.request.Method.HttpMethod;
 import http.response.Status;
 import java.io.FileNotFoundException;
-import session.SessionManager;
+import utils.DirectoryMatcher;
 
 public class RequestRouter {
     private final RequestManager requestManager;
@@ -28,17 +28,9 @@ public class RequestRouter {
                 responseManager.setErrorResponse(status);
                 return;
             }
-            validateUser();
             executeRequest();
         } catch (FileNotFoundException e) {
             responseManager.setErrorResponse(Status.NOT_FOUND);
-        }
-    }
-
-    private void validateUser() throws FileNotFoundException {
-        SessionManager sessionManager = new SessionManager(requestManager);
-        if (sessionManager.isAuthorizedUser()) {
-            requestManager.changeUserFilePath();
         }
     }
 
@@ -53,10 +45,11 @@ public class RequestRouter {
     private CommandHandler getCommandHandler() throws FileNotFoundException {
         FilePath filePath = requestManager.getFilePath();
         String filePathUrl = filePath.getFilePathUrl();
+        String absoluteFilePathUrl = DirectoryMatcher.matchDirectory(filePathUrl);
         if (CommandMatcher.isValidCommand(filePathUrl)) {
             return CommandMatcher.matchCommandHandler(filePathUrl);
         }
-        if (filePath.isValidFilePath(filePathUrl)) {
+        if (filePath.isValidFilePath(absoluteFilePathUrl)) {
             return new FileHandler();
         }
         throw new FileNotFoundException(IS_INVALID_FILE_PATH);
