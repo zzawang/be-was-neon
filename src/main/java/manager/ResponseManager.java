@@ -1,4 +1,4 @@
-package http;
+package manager;
 
 import http.response.ContentType;
 import http.response.Response;

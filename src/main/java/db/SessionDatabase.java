@@ -1,25 +1,26 @@
-package session;
+package db;
 
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import model.Session;
 
-public class SessionMemory {
-    private static Map<String, String> sessions = new ConcurrentHashMap<>();
+public class SessionDatabase {
+    private static Map<String, Session> sessions = new ConcurrentHashMap<>();
 
-    public static void addSession(String sid, String userName) {
-        sessions.put(sid, userName);
+    public static void addSession(String sid, Session session) {
+        sessions.put(sid, session);
     }
 
     public static boolean findSessionId(String sid) {
         return sessions.containsKey(sid);
     }
 
-    public static String findUserNameBySid(String sid) {
+    public static Session findSession(String sid) {
         return sessions.get(sid);
     }
 
-    public static Collection<String> findAllUserName() {
+    public static Collection<Session> findAllUserName() {
         return sessions.values();
     }
 

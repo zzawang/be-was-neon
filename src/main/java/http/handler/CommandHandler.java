@@ -2,12 +2,12 @@ package http.handler;
 
 import static utils.Constant.CONTENT_TYPE_DELIMITER;
 
-import http.RequestManager;
-import http.ResponseManager;
 import http.response.ContentType;
 import http.response.Status;
 import java.io.File;
-import session.SessionManager;
+import manager.RequestManager;
+import manager.ResponseManager;
+import manager.SessionManager;
 import utils.DirectoryMatcher;
 import utils.StaticFileReader;
 
@@ -70,7 +70,7 @@ public abstract class CommandHandler {
 
     protected ContentType getContentType(String filePathUrl) {
         String[] parts = filePathUrl.split(CONTENT_TYPE_DELIMITER);
-        String type = parts[parts.length - 1];
+        String type = parts[parts.length - 1].toLowerCase();
 
         for (ContentType contentType : ContentType.values()) {
             if (contentType.name().equals(type)) {

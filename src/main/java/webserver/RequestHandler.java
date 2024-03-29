@@ -1,12 +1,11 @@
 package webserver;
 
-import http.RequestManager;
-import http.RequestRouter;
-import http.ResponseManager;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.Socket;
+import manager.RequestManager;
+import manager.ResponseManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

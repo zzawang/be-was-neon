@@ -1,15 +1,17 @@
-package http;
+package webserver;
 
 import static http.request.FilePath.IS_INVALID_FILE_PATH;
 
 import http.handler.CommandHandler;
-import http.handler.CommandMatcher;
 import http.handler.FileHandler;
+import http.handler.UrlMapper;
 import http.request.FilePath;
 import http.request.Method;
 import http.request.Method.HttpMethod;
 import http.response.Status;
 import java.io.FileNotFoundException;
+import manager.RequestManager;
+import manager.ResponseManager;
 import utils.DirectoryMatcher;
 
 public class RequestRouter {
@@ -46,8 +48,8 @@ public class RequestRouter {
         FilePath filePath = requestManager.getFilePath();
         String filePathUrl = filePath.getFilePathUrl();
         String absoluteFilePathUrl = DirectoryMatcher.matchDirectory(filePathUrl);
-        if (CommandMatcher.isValidCommand(filePathUrl)) {
-            return CommandMatcher.matchCommandHandler(filePathUrl);
+        if (UrlMapper.isValidCommand(filePathUrl)) {
+            return UrlMapper.matchCommandHandler(filePathUrl);
         }
         if (filePath.isValidFilePath(absoluteFilePathUrl)) {
             return new FileHandler();

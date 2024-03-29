@@ -6,19 +6,19 @@ import java.io.FileNotFoundException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-class CommandMatcherTest {
+class UrlMapperTest {
 
     @DisplayName("알맞은 요청인지 확인한다.")
     @Test
     void isValidCommand() {
-        assertThat(CommandMatcher.isValidCommand("/user/create")).isTrue();
-        assertThat(CommandMatcher.isValidCommand("/userCreate")).isFalse();
+        assertThat(UrlMapper.isValidCommand("/registration")).isTrue();
+        assertThat(UrlMapper.isValidCommand("/java")).isFalse();
     }
 
     @DisplayName("요청에 따른 알맞은 Handler와 매치될 수 있다.")
     @Test
     void matchCommandHandler() throws FileNotFoundException {
-        assertThat(CommandMatcher.matchCommandHandler("/user/create")).isInstanceOf(UserCreateHandler.class);
-        assertThat(CommandMatcher.matchCommandHandler("/user/login")).isInstanceOf(UserLoginHandler.class);
+        assertThat(UrlMapper.matchCommandHandler("/registration")).isInstanceOf(UserCreateHandler.class);
+        assertThat(UrlMapper.matchCommandHandler("/login")).isInstanceOf(UserLoginHandler.class);
     }
 }

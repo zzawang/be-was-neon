@@ -35,9 +35,4 @@ public class User {
     public String toString() {
         return String.format(USER_TO_STRING_FORMAT, id, password, name, email);
     }
-
-    public boolean matchUser(User matchedUser) {
-        return matchedUser != null && this.id.equals(matchedUser.getId()) &&
-                this.password.equals(matchedUser.getPassword());
-    }
 }

@@ -8,7 +8,7 @@ import static utils.Constant.USER_PATH;
 import http.response.ContentType;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import model.User;
+import model.Session;
 import utils.StaticFileReader;
 
 public class UserListHandler extends CommandHandler {
@@ -36,10 +36,10 @@ public class UserListHandler extends CommandHandler {
 
     private String generateUserInfo() {
         StringBuilder sb = new StringBuilder();
-        List<User> users = sessionManager.getUsers();
+        List<Session> users = sessionManager.getUsers();
         for (int index = 0; index < users.size(); index++) {
-            User user = users.get(index);
-            sb.append(String.format(LIST_REPLACE_STR, index + 1, user.getId(), user.getName(), user.getEmail()))
+            Session user = users.get(index);
+            sb.append(String.format(LIST_REPLACE_STR, index + 1, user.userId(), user.userName(), user.userEmail()))
                     .append(LINE_FEED);
         }
         return sb.toString();

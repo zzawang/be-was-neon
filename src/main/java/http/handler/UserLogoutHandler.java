@@ -2,7 +2,7 @@ package http.handler;
 
 import static utils.Constant.BASE_PATH;
 
-import session.SessionManager;
+import manager.SessionManager;
 
 public class UserLogoutHandler extends CommandHandler {
     private static final String COOKIE_DELETE_FORMAT = "sid=%s; Path=%s; Max-Age=0";

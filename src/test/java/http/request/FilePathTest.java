@@ -9,7 +9,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class FilePathTest {
     @DisplayName("올바른 FilePath 요청이면 FilePath 객체를 생성할 수 있다.")
-    @ValueSource(strings = {"/index.html", "/user/create", "/user/login", "/registration"})
+    @ValueSource(strings = {"/", "/user/list", "/login", "/registration"})
     @ParameterizedTest
     void generateValidFilePath(String filePathUrl) throws FileNotFoundException {
         FilePath filePath = new FilePath(filePathUrl);

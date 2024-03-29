@@ -1,7 +1,8 @@
 package utils;
 
-import http.RequestManager;
 import java.io.UnsupportedEncodingException;
+import manager.RequestManager;
+import model.LoginUser;
 import model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,5 +43,11 @@ public class UserGenerator {
         String name = userInfo[NAME_INDEX];
         String email = userInfo[EMAIL_INDEX];
         return new User(id, pw, name, email);
+    }
+
+    public LoginUser createLoginUser() {
+        String[] userEncodedInfo = requestManager.extractUser();
+        String[] userInfo = decodeUserInfo(userEncodedInfo);
+        return new LoginUser(userInfo[ID_INDEX], userInfo[PW_INDEX]);
     }
 }

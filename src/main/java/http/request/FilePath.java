@@ -1,6 +1,6 @@
 package http.request;
 
-import http.handler.CommandMatcher;
+import http.handler.UrlMapper;
 import java.io.File;
 import java.io.FileNotFoundException;
 import utils.Decoder;
@@ -14,7 +14,7 @@ public class FilePath {
     public FilePath(String file) throws FileNotFoundException {
         this.filePath = file.trim();
         String absoluteFilePathUrl = DirectoryMatcher.matchDirectory(filePath);
-        if (!CommandMatcher.isValidCommand(filePath) && !isValidFilePath(absoluteFilePathUrl)) {
+        if (!UrlMapper.isValidCommand(filePath) && !isValidFilePath(absoluteFilePathUrl)) {
             throw new FileNotFoundException(IS_INVALID_FILE_PATH);
         }
         this.filePathUrl = filePath;

@@ -7,6 +7,7 @@ public enum ContentType {
     js("application/javascript;charset=utf-8"),
     ico("image/x-icon"),
     png("image/png"),
+    gif("image/"),
     jpg("image/jpeg"),
     jpeg("image/jpeg"),
     svg("image/svg+xml");

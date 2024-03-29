@@ -6,9 +6,8 @@ import static utils.Constant.LOGIN_FAILED_PATH;
 import static utils.Constant.LOGIN_PATH;
 
 import db.UserDatabase;
+import model.LoginUser;
 import model.User;
-import session.SessionManager;
-import session.SidGenerator;
 import utils.UserGenerator;
 
 public class UserLoginHandler extends CommandHandler {
@@ -31,12 +30,11 @@ public class UserLoginHandler extends CommandHandler {
         }
 
         UserGenerator userGenerator = new UserGenerator(requestManager);
-        User user = userGenerator.createUser();
-        User matchedUser = UserDatabase.findUserById(user.getId());
+        LoginUser loginUser = userGenerator.createLoginUser();
+        User expectedUser = UserDatabase.findUserById(loginUser.getId());
 
-        if (user.matchUser(matchedUser)) {
-            String sid = SidGenerator.generate();
-            SessionManager.setSession(sid, matchedUser.getName());
+        if (loginUser.matchUser(expectedUser)) {
+            String sid = sessionManager.setSession(expectedUser);
             responseManager.setRedirectResponse(AUTHORIZED_BASE_PATH);
             responseManager.setCookie(String.format(COOKIE_SETTING_FORMAT, sid, BASE_PATH));
             return;

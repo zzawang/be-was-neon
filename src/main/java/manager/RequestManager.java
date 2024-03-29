@@ -1,4 +1,4 @@
-package http;
+package manager;
 
 import static utils.Constant.BLANK;
 import static utils.Constant.CRLF;
@@ -6,6 +6,7 @@ import static utils.Constant.EMPTY;
 import static utils.Constant.LINE_FEED;
 
 import db.ArticleDatabase;
+import http.Version;
 import http.request.FilePath;
 import http.request.Method;
 import http.request.Request;
@@ -18,7 +19,6 @@ import java.util.Optional;
 import model.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import session.SessionManager;
 import utils.ArticleGenerator;
 
 public class RequestManager {
@@ -144,7 +144,7 @@ public class RequestManager {
                 break;
             }
         }
-        return sb.toString().replaceAll(CRLF, "");
+        return sb.toString().replaceAll(CRLF, EMPTY);
     }
 
     public Method getMethod() {
