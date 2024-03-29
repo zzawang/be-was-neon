@@ -6,7 +6,6 @@ import static utils.Constant.IMG_PATH;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.regex.Matcher;
@@ -23,7 +22,7 @@ public class ArticleGenerator {
     private static final Pattern IMAGE_PATTERN
             = Pattern.compile("^\s*Content-Disposition:\s*form-data;\s*name=\"articleImage\";\s*filename=\"(.*?)\"");
 
-    public static Article generateArticle(byte[] body, String userName) throws UnsupportedEncodingException {
+    public static Article generateArticle(byte[] body, String userName) {
         String content = "";
         String imageName = "";
         // form data라면 게시글 내용과 이미지 분리
