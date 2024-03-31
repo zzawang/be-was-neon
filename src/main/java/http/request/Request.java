@@ -38,6 +38,10 @@ public class Request {
         this.body = new RequestBody(body);
     }
 
+    public RequestBody getBody() {
+        return body;
+    }
+
     public Method getMethod() {
         return method;
     }

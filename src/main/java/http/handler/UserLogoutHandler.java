@@ -14,7 +14,7 @@ public class UserLogoutHandler extends CommandHandler {
             return;
         }
 
-        SessionManager sessionManager = new SessionManager(requestManager);
+        SessionManager sessionManager = new SessionManager(requestManager, sessionDb);
         sessionManager.expireSession();
         String cookie = requestManager.getCookie().get();
         responseManager.setCookie(String.format(COOKIE_DELETE_FORMAT, cookie, BASE_PATH));

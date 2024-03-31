@@ -1,23 +1,26 @@
 package model;
 
+import java.util.Optional;
+
 public class LoginUser {
-    private String id;
-    private String password;
+    private String userId;
+    private String userPw;
 
-    public LoginUser(String id, String password) {
-        this.id = id;
-        this.password = password;
+    public LoginUser(String userId, String userPw) {
+        this.userId = userId;
+        this.userPw = userPw;
     }
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUserPw() {
+        return userPw;
     }
 
-    public boolean matchUser(User user) {
-        return user != null && this.id.equals(user.getId()) && this.password.equals(user.getPassword());
+    public boolean matchUser(Optional<User> user) {
+        return user.filter(value -> this.userId.equals(value.getUserId()) && this.userPw.equals(value.getUserPw()))
+                .isPresent();
     }
 }

@@ -23,7 +23,7 @@ public class RequestRouter {
         this.responseManager = responseManager;
     }
 
-    public void processRequest() throws FileNotFoundException {
+    public void processRequest() {
         try {
             if (!requestManager.isOk()) {
                 Status status = requestManager.getStatus();

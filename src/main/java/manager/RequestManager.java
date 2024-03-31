@@ -5,7 +5,6 @@ import static utils.Constant.CRLF;
 import static utils.Constant.EMPTY;
 import static utils.Constant.LINE_FEED;
 
-import db.ArticleDatabase;
 import http.Version;
 import http.request.FilePath;
 import http.request.Method;
@@ -16,14 +15,11 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Optional;
-import model.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import utils.ArticleGenerator;
 
 public class RequestManager {
     private static final Logger logger = LoggerFactory.getLogger(RequestManager.class);
-    private static final String FORM_DATA_REGEX = "^multipart/form-data;\s*boundary=----WebKitFormBoundary.+$";
     private static final String SID_EXTRACT_DELIMITER = "sid=";
     private static final String QUERY_STR = "?";
     private static final String QUERY_REGEX = "\\?";
@@ -98,27 +94,9 @@ public class RequestManager {
         Optional<String> contentLengthHeader = request.getContentLength();
         if (contentLengthHeader.isPresent()) {
             int contentLength = Integer.parseInt(request.getContentLength().get().trim());
-            byte[] body = getRequestBody(contentLength);
+            byte[] body = getRequestBodyToBytes(contentLength);
             request.setBody(body);
         }
-    }
-
-    private byte[] getRequestBody(int contentLength) throws IOException {
-        byte[] body = getRequestBodyToBytes(contentLength);
-
-        if (isFormData()) {
-            SessionManager sessionManager = new SessionManager(this);
-            String userName = sessionManager.getUserName();
-            Article article = ArticleGenerator.generateArticle(body, userName);
-            ArticleDatabase.addArticle(article);
-            logger.info(article.toString());
-        }
-        return body;
-    }
-
-    private boolean isFormData() {
-        String contentType = request.getContentType();
-        return contentType.matches(FORM_DATA_REGEX);
     }
 
     private byte[] getRequestBodyToBytes(int contentLength) throws IOException {
@@ -147,6 +125,11 @@ public class RequestManager {
         return sb.toString().replaceAll(CRLF, EMPTY);
     }
 
+    public Request getRequest() {
+        return request;
+    }
+
+    // TODO: 삭제
     public Method getMethod() {
         return request.getMethod();
     }
@@ -155,13 +138,14 @@ public class RequestManager {
         return request.getFilePath();
     }
 
+    public String getContentType() {
+        return request.getContentType();
+    }
+
     public Optional<String> getQuery() {
         return request.getQuery();
     }
 
-    public Status getStatus() {
-        return status;
-    }
 
     public Optional<String> getCookie() {
         return request.getCookie();
@@ -169,6 +153,12 @@ public class RequestManager {
 
     public String[] extractUser() {
         return request.extractUser();
+    }
+    // TODO: 삭제
+
+
+    public Status getStatus() {
+        return status;
     }
 
     public boolean isOk() {

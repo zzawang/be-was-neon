@@ -3,36 +3,41 @@ package model;
 public class User {
     private static final String USER_TO_STRING_FORMAT = "User [userId=%s, password=%s, name=%s, email=%s]";
 
-    private String id;
-    private String password;
-    private String name;
-    private String email;
+    private long id;
+    private String userId;
+    private String userPw;
+    private String userName;
+    private String userEmail;
 
-    public User(String id, String password, String name, String email) {
-        this.id = id;
-        this.password = password;
-        this.name = name;
-        this.email = email;
+    public User(String userId, String userPw, String userName, String userEmail) {
+        this.userId = userId;
+        this.userPw = userPw;
+        this.userName = userName;
+        this.userEmail = userEmail;
     }
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getPassword() {
-        return password;
+    public String getUserPw() {
+        return userPw;
     }
 
-    public String getName() {
-        return name;
+    public String getUserName() {
+        return userName;
     }
 
-    public String getEmail() {
-        return email;
+    public String getUserEmail() {
+        return userEmail;
     }
 
     @Override
     public String toString() {
-        return String.format(USER_TO_STRING_FORMAT, id, password, name, email);
+        return String.format(USER_TO_STRING_FORMAT, userId, userPw, userName, userEmail);
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

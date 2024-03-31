@@ -4,7 +4,6 @@ import static utils.Constant.AUTHORIZED_BASE_PATH;
 import static utils.Constant.BASE_PATH;
 import static utils.Constant.REGISTRATION_PATH;
 
-import db.UserDatabase;
 import model.User;
 import utils.UserGenerator;
 
@@ -22,7 +21,7 @@ public class UserCreateHandler extends CommandHandler {
     public void handlePostRequest() {
         UserGenerator userGenerator = new UserGenerator(requestManager);
         User user = userGenerator.createUser();
-        UserDatabase.addUser(user);
+        userDb.addUser(user);
         responseManager.setRedirectResponse(BASE_PATH);
     }
 }

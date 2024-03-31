@@ -37,11 +37,12 @@ public class UserListHandler extends CommandHandler {
     private String generateUserInfo() {
         StringBuilder sb = new StringBuilder();
         List<Session> users = sessionManager.getUsers();
-        for (int index = 0; index < users.size(); index++) {
-            Session user = users.get(index);
-            sb.append(String.format(LIST_REPLACE_STR, index + 1, user.userId(), user.userName(), user.userEmail()))
-                    .append(LINE_FEED);
-        }
+
+        users.forEach(user -> {
+            String userInfo = String.format(LIST_REPLACE_STR, user.getId(), user.getUserId(), user.getUserName(),
+                    user.getUserEmail());
+            sb.append(userInfo).append(LINE_FEED);
+        });
         return sb.toString();
     }
 }

@@ -5,7 +5,6 @@ import static utils.Constant.BASE_PATH;
 import static utils.Constant.EMPTY;
 import static utils.Constant.EMPTY_ARTICLE_PATH;
 
-import db.ArticleDatabase;
 import http.response.ContentType;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
@@ -20,7 +19,7 @@ public class UserHomeHandler extends CommandHandler {
     private static final String ARTICLE_CONTENT_REPLACEMENT = "article_content_replacement";
     private static final String PRE_ARTICLE_ID_REPLACEMENT = "pre_article_id_replacement";
     private static final String NEXT_ARTICLE_ID_REPLACEMENT = "next_article_id_replacement";
-    private static final String NAV_PATH = "/main?article=%s";
+    private static final String NAV_PATH = "/main?article=%d";
     private static final String EMPTY_NAV = "<li class=\"empty__nav__menu__item\"></li>";
     private static final String PRE_NAV_HTML = """
                             <li class=\"nav__menu__item\">
@@ -51,24 +50,20 @@ public class UserHomeHandler extends CommandHandler {
             responseManager.setRedirectResponse(BASE_PATH);
             return;
         }
-        if (isArticleEmpty()) { // 아무 게시글도 없거나 잘못된 페이지 번호에 접근했을때
+        long aid = getArticleId();
+        Optional<Article> article = articleDb.findArticleByAid(aid);
+        if (article.isEmpty()) { // 아무 게시글도 없거나 잘못된 페이지 번호에 접근했을때
             responseManager.setRedirectResponse(EMPTY_ARTICLE_PATH);
             return;
         }
 
         StaticFileReader staticFileReader = generateStaticFileReader(AUTHORIZED_BASE_PATH);
-        String articleBody = generateArticle(staticFileReader);
+        String articleBody = generateArticle(staticFileReader, article.get());
         String responseBody = generateArticleNav(articleBody);
         responseManager.setOkResponse(ContentType.html, responseBody.getBytes());
     }
 
-    private boolean isArticleEmpty() {
-        return ArticleDatabase.isEmpty() || !ArticleDatabase.hasArticleId(getArticleId());
-    }
-
-    private String generateArticle(StaticFileReader staticFileReader) {
-        String aid = getArticleId();
-        Article article = ArticleDatabase.findArticleBySequenceId(aid);
+    private String generateArticle(StaticFileReader staticFileReader, Article article) {
         String content = new String(staticFileReader.readAllBytes(), StandardCharsets.UTF_8);
         content = content.replaceAll(USER_NAME_REPLACEMENT, article.getUserName());
         content = content.replaceAll(ARTICLE_IMG_REPLACEMENT, Decoder.decodeStr(article.getFilePath()));
@@ -76,16 +71,17 @@ public class UserHomeHandler extends CommandHandler {
         return content;
     }
 
-    private String getArticleId() {
+    private long getArticleId() {
         Optional<String> query = requestManager.getQuery();
         // 게시물 id를 명시하지 않은 url일 경우 자동으로 최신 게시물로 매핑
-        return query.map(s -> s.replaceAll(ARTICLE_REGEX, EMPTY)).orElseGet(ArticleDatabase::getRecentSequenceId);
+        return query.map(s -> Long.parseLong(s.replaceAll(ARTICLE_REGEX, EMPTY)))
+                .orElseGet(() -> articleDb.getRecentAid());
     }
 
     private String generateArticleNav(String articleBody) {
-        String aid = getArticleId();
-        int preAid = Integer.parseInt(aid) - 1;
-        int nextAid = Integer.parseInt(aid) + 1;
+        long aid = getArticleId();
+        long preAid = aid - 1;
+        long nextAid = aid + 1;
 
         if (isFirstArticle(aid)) {
             articleBody = articleBody.replaceAll(PRE_NAV_HTML, EMPTY_NAV);
@@ -98,11 +94,11 @@ public class UserHomeHandler extends CommandHandler {
         return articleBody;
     }
 
-    private boolean isFirstArticle(String aid) {
-        return aid.equals("1");
+    private boolean isFirstArticle(long aid) {
+        return aid == 1;
     }
 
-    private boolean isLastArticle(String aid) {
-        return aid.equals(ArticleDatabase.getRecentSequenceId());
+    private boolean isLastArticle(long aid) {
+        return aid == articleDb.getRecentAid();
     }
 }

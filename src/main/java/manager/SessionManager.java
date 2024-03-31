@@ -1,17 +1,19 @@
 package manager;
 
-import db.SessionDatabase;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import model.Session;
 import model.User;
+import repository.JdbcSessionRepository;
 
 public class SessionManager {
     private final RequestManager requestManager;
+    private final JdbcSessionRepository sessionDb;
 
-    public SessionManager(RequestManager requestManager) {
+    public SessionManager(RequestManager requestManager, JdbcSessionRepository sessionDb) {
         this.requestManager = requestManager;
+        this.sessionDb = sessionDb;
     }
 
     public boolean isAuthorizedUser() {
@@ -28,22 +30,27 @@ public class SessionManager {
 
     public String getUserName() {
         String sid = requestManager.getSid();
-        return SessionDatabase.findSession(sid).userName();
+        Optional<Session> session = sessionDb.findSessionBySid(sid);
+        if (session.isEmpty()) {
+
+        }
+
+        return session.get().getUserName();
     }
 
     public List<Session> getUsers() {
-        return SessionDatabase.findAllUserName().stream().toList();
+        return sessionDb.findAllSession().stream().toList();
     }
 
     public void expireSession() {
         String sid = requestManager.getSid();
-        SessionDatabase.removeSession(sid);
+        sessionDb.removeSession(sid);
     }
 
     public String setSession(User user) {
         String sid = generate();
-        Session session = new Session(sid, user.getId(), user.getName(), user.getEmail());
-        SessionDatabase.addSession(sid, session);
+        Session session = new Session(sid, user.getUserId(), user.getUserName(), user.getUserEmail());
+        sessionDb.addSession(session);
         return sid;
     }
 
@@ -61,6 +68,6 @@ public class SessionManager {
     }
 
     private boolean isSessionIdExists(String sid) {
-        return SessionDatabase.findSessionId(sid);
+        return sessionDb.isSessionIdPresent(sid);
     }
 }
