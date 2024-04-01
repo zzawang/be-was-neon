@@ -1,7 +1,7 @@
 package model;
 
 public class Article {
-    private static final String ARTICLE_TO_STRING_FORMAT = "Article [sequenceId=%s, userName=%s, content=%s, imageSize=%s]";
+    private static final String ARTICLE_TO_STRING_FORMAT = "Article [sequenceId=%s, userName=%s, content=%s, filePath=%s]";
 
     private long id;
     private final String userName;

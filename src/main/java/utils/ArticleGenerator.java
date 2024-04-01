@@ -2,6 +2,7 @@ package utils;
 
 import static utils.Constant.BASE_DIRECTORY_PATH;
 import static utils.Constant.BASE_PATH;
+import static utils.Constant.EMPTY;
 import static utils.Constant.IMG_PATH;
 
 import java.io.FileOutputStream;
@@ -64,9 +65,12 @@ public class ArticleGenerator {
 
     private static String getImageName(String contentInfo) {
         Matcher imageMatcher = IMAGE_PATTERN.matcher(contentInfo);
-        String fileName = "";
+        String fileName = EMPTY;
         if (imageMatcher.find()) {
             fileName = imageMatcher.group(1);
+        }
+        if (fileName.equals(EMPTY)) {
+            return "basicimage.png";
         }
         return fileName;
     }
@@ -74,6 +78,9 @@ public class ArticleGenerator {
     private static void generateImage(byte[] body, String imageName, ByteLineBoundary boundary) {
         boundary.setNextLine(body);
         imageName = Decoder.decodeStr(imageName);
+        if (imageName.equals("basicimage.png")) {
+            return;
+        }
         byte[] image = Arrays.copyOfRange(body, boundary.end + 3, body.length - 2);
         generateFile(imageName, image);
     }
