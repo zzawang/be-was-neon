@@ -25,41 +25,66 @@ public class ArticleGenerator {
     public static Article generateArticle(byte[] body, String userName) {
         String content = "";
         String imageName = "";
+
         // form data라면 게시글 내용과 이미지 분리
-        int start = 0;
-        while (start < body.length) {
-            int end = getEndOfByteLine(start, body);
-            String convertedStr = convertByteToStr(body, start, end);
-            start = end + 1;
-
+        ByteLineBoundary boundary = new ByteLineBoundary(0, getEndOfByteLine(0, body));
+        while (boundary.start < body.length) {
+            String convertedStr = readByteLine(boundary, body);
             if (convertedStr.matches(BOUNDARY_REGEX)) {
-                end = getEndOfByteLine(start, body);
-                String contentInfo = convertByteToStr(body, start, end);
-                start = end + 1;
+                boundary.end = getEndOfByteLine(boundary.start, body);
+                String contentInfo = readByteLine(boundary, body);
 
-                Matcher contentMatcher = CONTENT_PATTERN.matcher(contentInfo);
-                if (contentMatcher.find()) {
-                    start += 2;
-                    end = getEndOfByteLine(start, body);
-
-                    content = convertByteToStr(body, start, end);
-                    logger.debug("게시글 내용 : " + content);
+                if (isArticleContent(contentInfo)) {
+                    content = getArticleContent(body, boundary);
                 }
-
-                Matcher imageMatcher = IMAGE_PATTERN.matcher(contentInfo);
-                if (imageMatcher.find()) {
-                    start += 2;
-                    end = getEndOfByteLine(start, body);
-
-                    imageName = Decoder.decodeStr(imageMatcher.group(1));
-                    byte[] image = Arrays.copyOfRange(body, end + 3, body.length - 2);
-                    generateFile(imageName, image);
+                if (isArticleImage(contentInfo)) {
+                    imageName = getImageName(contentInfo);
+                    generateImage(body, imageName, boundary);
                     break;
                 }
             }
+            boundary.end = getEndOfByteLine(boundary.start, body);
         }
-
         return new Article(userName, content, IMG_PATH + BASE_PATH + imageName);
+    }
+
+    private static boolean isArticleContent(String contentInfo) {
+        Matcher contentMatcher = CONTENT_PATTERN.matcher(contentInfo);
+        return contentMatcher.find();
+    }
+
+    private static boolean isArticleImage(String contentInfo) {
+        Matcher imageMatcher = IMAGE_PATTERN.matcher(contentInfo);
+        return imageMatcher.find();
+    }
+
+    private static String getArticleContent(byte[] body, ByteLineBoundary boundary) {
+        boundary.setNextLine(body);
+        String content = readByteLine(boundary, body);
+        logger.debug("게시글 내용 : " + content);
+        return content;
+    }
+
+    private static String getImageName(String contentInfo) {
+        Matcher imageMatcher = IMAGE_PATTERN.matcher(contentInfo);
+        String fileName = "";
+        if (imageMatcher.find()) {
+            fileName = imageMatcher.group(1);
+        }
+        return fileName;
+    }
+
+    private static void generateImage(byte[] body, String imageName, ByteLineBoundary boundary) {
+        boundary.setNextLine(body);
+        imageName = Decoder.decodeStr(imageName);
+        byte[] image = Arrays.copyOfRange(body, boundary.end + 3, body.length - 2);
+        generateFile(imageName, image);
+    }
+
+    private static String readByteLine(ByteLineBoundary boundary, byte[] body) {
+        String convertedStr = convertByteToStr(body, boundary);
+        boundary.start = boundary.end + 1;
+        return convertedStr;
     }
 
     private static void generateFile(String imageName, byte[] image) {
@@ -89,8 +114,23 @@ public class ArticleGenerator {
         return end;
     }
 
-    private static String convertByteToStr(byte[] body, int start, int end) {
-        byte[] copyByte = Arrays.copyOfRange(body, start, end - 1);
+    private static String convertByteToStr(byte[] body, ByteLineBoundary boundary) {
+        byte[] copyByte = Arrays.copyOfRange(body, boundary.start, boundary.end - 1);
         return new String(copyByte, StandardCharsets.UTF_8);
+    }
+
+    private static class ByteLineBoundary {
+        int start;
+        int end;
+
+        ByteLineBoundary(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public void setNextLine(byte[] body) {
+            this.start += 2;
+            this.end = getEndOfByteLine(this.start, body);
+        }
     }
 }
