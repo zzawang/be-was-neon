@@ -43,7 +43,7 @@ public class ArticleGenerator {
                     end = getEndOfByteLine(start, body);
 
                     content = convertByteToStr(body, start, end);
-                    logger.info("게시글 내용 : " + content);
+                    logger.debug("게시글 내용 : " + content);
                 }
 
                 Matcher imageMatcher = IMAGE_PATTERN.matcher(contentInfo);

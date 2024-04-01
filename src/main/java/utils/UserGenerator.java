@@ -23,7 +23,7 @@ public class UserGenerator {
         String[] userEncodedInfo = requestManager.extractUser();
         String[] userInfo = decodeUserInfo(userEncodedInfo);
         User user = generateUserObj(userInfo);
-        logger.info(user.toString());
+        logger.debug(user.toString());
 
         return user;
     }

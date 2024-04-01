@@ -27,16 +27,16 @@ public class UserArticleHandler extends CommandHandler {
     public void handlePostRequest() {
         if (isFormData()) {
             String userName = sessionManager.getUserName();
-            RequestBody requestBody = requestManager.getRequest().getBody();
+            RequestBody requestBody = requestManager.getRequestBody();
             Article article = requestBody.generateArticle(userName);
             articleDb.addArticle(article);
-            logger.info(article.toString());
+            logger.debug("게시글 {} 작성 완료", article);
         }
         responseManager.setRedirectResponse(AUTHORIZED_BASE_PATH);
     }
 
     private boolean isFormData() {
-        String contentType = requestManager.getRequest().getContentType();
+        String contentType = requestManager.getContentType();
         return contentType.matches(FORM_DATA_REGEX);
     }
 }

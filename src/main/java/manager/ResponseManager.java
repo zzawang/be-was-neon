@@ -44,7 +44,7 @@ public class ResponseManager {
         } catch (IOException e) {
             logger.error(e.getMessage());
         }
-        logger.info(headers);
+        logger.debug(headers);
         dos.flush();
     }
 }

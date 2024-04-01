@@ -17,8 +17,6 @@ public class JdbcArticleRepository implements ArticleRepository {
     private static final String SELECT_BY_AID_SQL = "SELECT * FROM article WHERE id = ?";
     private static final String SELECT_ALL_SQL = "SELECT * FROM article";
     private static final String SELECT_RECENT_AID_SQL = "SELECT MAX(id) FROM article";
-    private static final String CHECK_AID_SQL = "SELECT COUNT(*) FROM article WHERE id = ?";
-    private static final String CHECK_EMPTY_SQL = "SELECT COUNT(*) FROM article";
 
     private final DataSource dataSource;
 

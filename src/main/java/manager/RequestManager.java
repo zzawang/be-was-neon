@@ -9,6 +9,7 @@ import http.Version;
 import http.request.FilePath;
 import http.request.Method;
 import http.request.Request;
+import http.request.RequestBody;
 import http.response.Status;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -41,7 +42,7 @@ public class RequestManager {
             setFirstLine();
             setRequestHeaders();
             setRequestBody();
-            logger.info(request.getFormattedRequest());
+            logger.debug(request.getFormattedRequest());
         } catch (FileNotFoundException e) {
             status = Status.NOT_FOUND;
         } catch (IllegalStateException e) {
@@ -69,7 +70,7 @@ public class RequestManager {
 
     private String getFirstLine() throws IOException {
         String request = readLine();
-        logger.info(request);
+        logger.debug(request);
         if (request.equals(EMPTY)) {
             throw new IOException();
         }
@@ -125,11 +126,6 @@ public class RequestManager {
         return sb.toString().replaceAll(CRLF, EMPTY);
     }
 
-    public Request getRequest() {
-        return request;
-    }
-
-    // TODO: 삭제
     public Method getMethod() {
         return request.getMethod();
     }
@@ -151,11 +147,13 @@ public class RequestManager {
         return request.getCookie();
     }
 
+    public RequestBody getRequestBody() {
+        return request.getBody();
+    }
+
     public String[] extractUser() {
         return request.extractUser();
     }
-    // TODO: 삭제
-
 
     public Status getStatus() {
         return status;
