@@ -31,9 +31,7 @@ public class ArticleGenerator {
         while (boundary.start < body.length) {
             String convertedStr = readByteLine(boundary, body);
             if (convertedStr.matches(BOUNDARY_REGEX)) {
-                boundary.end = getEndOfByteLine(boundary.start, body);
                 String contentInfo = readByteLine(boundary, body);
-
                 if (isArticleContent(contentInfo)) {
                     content = getArticleContent(body, boundary);
                 }
@@ -43,7 +41,6 @@ public class ArticleGenerator {
                     break;
                 }
             }
-            boundary.end = getEndOfByteLine(boundary.start, body);
         }
         return new Article(userName, content, IMG_PATH + BASE_PATH + imageName);
     }
@@ -82,6 +79,7 @@ public class ArticleGenerator {
     }
 
     private static String readByteLine(ByteLineBoundary boundary, byte[] body) {
+        boundary.end = getEndOfByteLine(boundary.start, body);
         String convertedStr = convertByteToStr(body, boundary);
         boundary.start = boundary.end + 1;
         return convertedStr;
