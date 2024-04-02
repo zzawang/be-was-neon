@@ -66,6 +66,10 @@ public class Request {
         return body.extractUser();
     }
 
+    public String extractComment() {
+        return body.extractComment();
+    }
+
     public String getFormattedRequest() {
         StringBuilder sb = new StringBuilder();
         sb.append(FIRST_LINE_MSG).append(generateFirstLinePhrase()).append(LINE_FEED);

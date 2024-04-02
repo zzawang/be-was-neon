@@ -11,7 +11,7 @@ import model.User;
 import utils.UserGenerator;
 
 public class UserLoginHandler extends CommandHandler {
-    private static final String COOKIE_SETTING_FORMAT = "sid=%s; Path=%s; Max-Age=3600";
+    private static final String COOKIE_SETTING_FORMAT = "sid=%s; Path=%s";
 
     @Override
     public void handleGetRequest() {

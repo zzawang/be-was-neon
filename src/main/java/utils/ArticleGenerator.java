@@ -34,7 +34,7 @@ public class ArticleGenerator {
             if (convertedStr.matches(BOUNDARY_REGEX)) {
                 String contentInfo = readByteLine(boundary, body);
                 if (isArticleContent(contentInfo)) {
-                    content = getArticleContent(body, boundary);
+                    content = Decoder.decodeStr(getArticleContent(body, boundary));
                 }
                 if (isArticleImage(contentInfo)) {
                     imageName = getImageName(contentInfo);

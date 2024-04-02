@@ -32,9 +32,8 @@ public class SessionManager {
         String sid = requestManager.getSid();
         Optional<Session> session = sessionDb.findSessionBySid(sid);
         if (session.isEmpty()) {
-
+            return "UNKNOWN";
         }
-
         return session.get().getUserName();
     }
 

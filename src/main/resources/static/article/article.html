@@ -54,13 +54,13 @@
                         id="articleContent"
                         name="articleContent"
                         placeholder="글의 내용을 입력하세요"
-                        autocomplete="username"
                 ></textarea>
             </div>
             <div class="file-upload-container">
                 <label for="articleImage" class="btn btn_image btn_size_m">이미지 업로드</label>
                 <input type="file" id="articleImage" name="articleImage"
                        accept="image/png, image/gif, image/jpeg, image/svg"
+                       required=true
                        onchange="previewImage(event)"/>
             </div>
             <button id="registration-btn" class="btn btn_contained btn_size_m" style="margin-top: 24px" type="submit">작성

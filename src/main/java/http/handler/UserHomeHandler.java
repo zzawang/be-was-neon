@@ -7,8 +7,10 @@ import static utils.Constant.EMPTY_ARTICLE_PATH;
 
 import http.response.ContentType;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Optional;
 import model.Article;
+import model.Comment;
 import utils.Decoder;
 import utils.StaticFileReader;
 
@@ -17,6 +19,20 @@ public class UserHomeHandler extends CommandHandler {
     private static final String USER_NAME_REPLACEMENT = "user_name_replacement";
     private static final String ARTICLE_IMG_REPLACEMENT = "article_img_replacement";
     private static final String ARTICLE_CONTENT_REPLACEMENT = "article_content_replacement";
+    private static final String COMMENT_BTN_REPLACEMENT = "comment_btn_replacement";
+    private static final String COMMENT_ID_REPLACEMENT = "comment_id_replacement";
+    private static final String COMMENT_PATH = "/comment?article=%d";
+    private static final String COMMENT_HTML = """
+                        <li class=\"comment__item\">
+                            <div class=\"comment__item__user\">
+                                <img class=\"comment__item__user__img\"/>
+                                <p class=\"comment__item__user__nickname\">%s</p>
+                            </div>
+                            <p class=\"comment__item__article\">
+                                %s
+                            </p>
+                        </li>
+            """;
     private static final String PRE_ARTICLE_ID_REPLACEMENT = "pre_article_id_replacement";
     private static final String NEXT_ARTICLE_ID_REPLACEMENT = "next_article_id_replacement";
     private static final String NAV_PATH = "/main?article=%d";
@@ -59,7 +75,8 @@ public class UserHomeHandler extends CommandHandler {
 
         StaticFileReader staticFileReader = generateStaticFileReader(AUTHORIZED_BASE_PATH);
         String articleBody = generateArticle(staticFileReader, article.get());
-        String responseBody = generateArticleNav(articleBody);
+        String commentBody = generateComment(aid, articleBody);
+        String responseBody = generateArticleNav(aid, commentBody);
         responseManager.setOkResponse(ContentType.html, responseBody.getBytes());
     }
 
@@ -71,6 +88,18 @@ public class UserHomeHandler extends CommandHandler {
         return content;
     }
 
+    private String generateComment(long aid, String articleBody) {
+        List<Comment> comments = commentDb.findAllCommentsByAid(aid).stream().toList();
+        if (comments.isEmpty()) {
+            return articleBody.replaceAll(COMMENT_ID_REPLACEMENT, EMPTY);
+        }
+        String userName = sessionManager.getUserName();
+        StringBuilder sb = new StringBuilder();
+        comments.stream().map(comment -> Decoder.decodeStr(comment.getContent()))
+                .forEach(content -> sb.append(String.format(COMMENT_HTML, userName, content)));
+        return articleBody.replaceAll(COMMENT_ID_REPLACEMENT, sb.toString());
+    }
+
     private long getArticleId() {
         Optional<String> query = requestManager.getQuery();
         // 게시물 id를 명시하지 않은 url일 경우 자동으로 최신 게시물로 매핑
@@ -78,8 +107,7 @@ public class UserHomeHandler extends CommandHandler {
                 .orElseGet(() -> articleDb.getRecentAid());
     }
 
-    private String generateArticleNav(String articleBody) {
-        long aid = getArticleId();
+    private String generateArticleNav(long aid, String articleBody) {
         long preAid = aid - 1;
         long nextAid = aid + 1;
 
@@ -91,6 +119,7 @@ public class UserHomeHandler extends CommandHandler {
         }
         articleBody = articleBody.replaceAll(PRE_ARTICLE_ID_REPLACEMENT, String.format(NAV_PATH, preAid));
         articleBody = articleBody.replaceAll(NEXT_ARTICLE_ID_REPLACEMENT, String.format(NAV_PATH, nextAid));
+        articleBody = articleBody.replaceAll(COMMENT_BTN_REPLACEMENT, String.format(COMMENT_PATH, aid));
         return articleBody;
     }
 

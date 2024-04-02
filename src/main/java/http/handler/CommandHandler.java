@@ -12,6 +12,7 @@ import manager.ResponseManager;
 import manager.SessionManager;
 import org.apache.commons.dbcp2.BasicDataSource;
 import repository.JdbcArticleRepository;
+import repository.JdbcCommentRepository;
 import repository.JdbcSessionRepository;
 import repository.JdbcUserRepository;
 import utils.DirectoryMatcher;
@@ -23,6 +24,7 @@ public abstract class CommandHandler {
     protected static JdbcUserRepository userDb = new JdbcUserRepository(createDataSource());
     protected static JdbcSessionRepository sessionDb = new JdbcSessionRepository(createDataSource());
     protected static JdbcArticleRepository articleDb = new JdbcArticleRepository(createDataSource());
+    protected static JdbcCommentRepository commentDb = new JdbcCommentRepository(createDataSource());
     protected SessionManager sessionManager;
 
     public void setManagers(RequestManager requestManager, ResponseManager responseManager) {

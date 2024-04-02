@@ -142,7 +142,6 @@ public class RequestManager {
         return request.getQuery();
     }
 
-
     public Optional<String> getCookie() {
         return request.getCookie();
     }
@@ -153,6 +152,10 @@ public class RequestManager {
 
     public String[] extractUser() {
         return request.extractUser();
+    }
+
+    public String extractComment() {
+        return request.extractComment();
     }
 
     public Status getStatus() {
