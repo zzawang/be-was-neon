@@ -4,14 +4,18 @@ import static utils.Constant.AUTHORIZED_BASE_PATH;
 import static utils.Constant.BASE_PATH;
 import static utils.Constant.EMPTY;
 import static utils.Constant.EMPTY_ARTICLE_PATH;
+import static utils.Constant.EMPTY_IMG;
+import static utils.Constant.IMG_PATH;
 
 import http.response.ContentType;
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import model.Article;
 import model.Comment;
 import utils.Decoder;
+import utils.DirectoryMatcher;
 import utils.StaticFileReader;
 
 public class UserHomeHandler extends CommandHandler {
@@ -25,7 +29,7 @@ public class UserHomeHandler extends CommandHandler {
     private static final String COMMENT_HTML = """
                         <li class=\"comment__item\">
                             <div class=\"comment__item__user\">
-                                <img class=\"comment__item__user__img\"/>
+                                <img class=\"comment__item__user__img\" src="/img/post-account.png"/>
                                 <p class=\"comment__item__user__nickname\">%s</p>
                             </div>
                             <p class=\"comment__item__article\">
@@ -83,9 +87,19 @@ public class UserHomeHandler extends CommandHandler {
     private String generateArticle(StaticFileReader staticFileReader, Article article) {
         String content = new String(staticFileReader.readAllBytes(), StandardCharsets.UTF_8);
         content = content.replaceAll(USER_NAME_REPLACEMENT, article.getUserName());
-        content = content.replaceAll(ARTICLE_IMG_REPLACEMENT, Decoder.decodeStr(article.getFilePath()));
+        String filePath = verifyFilePath(Decoder.decodeStr(article.getFilePath()));
+        content = content.replaceAll(ARTICLE_IMG_REPLACEMENT, filePath);
         content = content.replaceAll(ARTICLE_CONTENT_REPLACEMENT, article.getContent());
         return content;
+    }
+
+    private String verifyFilePath(String decodeStr) {
+        String matchDirectory = DirectoryMatcher.matchDirectory(decodeStr);
+        File file = new File(matchDirectory);
+        if (file.exists() && file.isFile()) {
+            return decodeStr;
+        }
+        return IMG_PATH + BASE_PATH + EMPTY_IMG;
     }
 
     private String generateComment(long aid, String articleBody) {
