@@ -5,11 +5,14 @@ import static utils.Constant.BASE_PATH;
 import static utils.Constant.EMPTY;
 import static utils.Constant.EMPTY_IMG;
 import static utils.Constant.IMG_PATH;
+import static utils.Constant.LINE_FEED;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import model.Article;
@@ -69,9 +72,17 @@ public class ArticleGenerator {
 
     private static String getArticleContent(byte[] body, ByteLineBoundary boundary) {
         boundary.setNextLine(body);
-        String content = readByteLine(boundary, body);
-        logger.debug("게시글 내용 : " + content);
-        return content;
+        ByteLineBoundary preByteLineBoundary = new ByteLineBoundary(boundary.start, boundary.end);
+        List<String> content = new ArrayList<>();
+        String line = readByteLine(boundary, body);
+        while (!line.matches(BOUNDARY_REGEX)) {
+            content.add(line);
+            preByteLineBoundary.setBoundary(boundary.start, boundary.end);
+            line = readByteLine(boundary, body);
+        }
+        logger.debug("게시글 내용 : " + String.join(LINE_FEED, content));
+        boundary.setBoundary(preByteLineBoundary.start, preByteLineBoundary.end); // 다시 boundary 돌려놓기
+        return String.join(LINE_FEED, content);
     }
 
     private static String getImageName(String contentInfo) {
@@ -140,6 +151,11 @@ public class ArticleGenerator {
         int end;
 
         ByteLineBoundary(int start, int end) {
+            this.start = start;
+            this.end = end;
+        }
+
+        public void setBoundary(int start, int end) {
             this.start = start;
             this.end = end;
         }
