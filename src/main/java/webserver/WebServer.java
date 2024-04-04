@@ -7,11 +7,19 @@ import java.util.concurrent.Executors;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 웹 서버를 시작하는 클래스
+ */
 public class WebServer {
     private static final ExecutorService executorService = Executors.newCachedThreadPool();
     private static final Logger logger = LoggerFactory.getLogger(WebServer.class);
     private static final int DEFAULT_PORT = 8080;
 
+    /**
+     * 웹 서버를 실행하는 메인 메서드
+     * @param args 명령행 인수
+     * @throws Exception 예외가 발생할 경우
+     */
     public static void main(String args[]) throws Exception {
         int port;
         if (args == null || args.length == 0) {

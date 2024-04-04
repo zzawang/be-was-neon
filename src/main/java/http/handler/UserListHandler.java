@@ -11,10 +11,17 @@ import java.util.List;
 import model.Session;
 import utils.StaticFileReader;
 
+/**
+ * 사용자 목록 처리를 담당하는 클래스
+ */
 public class UserListHandler extends CommandHandler {
     private static final String LIST_REGEX = "user_table_replacement";
     private static final String LIST_REPLACE_STR = "<tr><th scope=\"row\">%d</th><td>%s</td><td>%s</td><td>%s</td></tr>";
 
+    /**
+     * 인증된 사용자가 아닌 경우 로그인 페이지로 리다이렉션한다.
+     * 사용자 목록을 가져와 사용자 아이디, 이름, 이메일 정보를 담은 리스트로 만들어서 응답한다.
+     */
     @Override
     public void handleGetRequest() {
         if (!sessionManager.isAuthorizedUser()) {

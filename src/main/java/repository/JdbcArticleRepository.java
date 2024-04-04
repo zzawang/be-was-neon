@@ -12,6 +12,9 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import model.Article;
 
+/**
+ * JDBC를 사용하여 ArticleRepository를 구현한 클래스
+ */
 public class JdbcArticleRepository implements ArticleRepository {
     private static final String INSERT_SQL = "INSERT INTO article (user_name, content, filePath) VALUES (?, ?, ?)";
     private static final String SELECT_BY_AID_SQL = "SELECT * FROM article WHERE id = ?";
@@ -20,6 +23,11 @@ public class JdbcArticleRepository implements ArticleRepository {
 
     private final DataSource dataSource;
 
+    /**
+     * JdbcArticleRepository를 생성하는 생성자
+     *
+     * @param dataSource 데이터베이스 연결을 위한 DataSource
+     */
     public JdbcArticleRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -90,6 +98,13 @@ public class JdbcArticleRepository implements ArticleRepository {
         }
     }
 
+    /**
+     * ResultSet으로부터 Article 객체를 생성한다.
+     *
+     * @param rs ResultSet 객체
+     * @return 생성된 Article 객체
+     * @throws SQLException SQL 예외가 발생한 경우
+     */
     private Article generateArticle(ResultSet rs) throws SQLException {
         long id = rs.getLong("id");
         String userName = rs.getString("user_name");

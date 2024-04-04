@@ -14,15 +14,26 @@ import manager.RequestManager;
 import manager.ResponseManager;
 import utils.DirectoryMatcher;
 
+/**
+ * 클라이언트 요청을 적절한 핸들러로 라우팅하는 클래스
+ */
 public class RequestRouter {
     private final RequestManager requestManager;
     private final ResponseManager responseManager;
 
+    /**
+     * RequestRouter 클래스의 생성자
+     * @param requestManager 클라이언트가 보낸 요청을 관리하는 RequestManager 객체
+     * @param responseManager 서버로 전송할 응답을 관리하는 ResponseManager 객체
+     */
     public RequestRouter(RequestManager requestManager, ResponseManager responseManager) {
         this.requestManager = requestManager;
         this.responseManager = responseManager;
     }
 
+    /**
+     * 클라이언트 요청을 처리한다.
+     */
     public void processRequest() {
         try {
             if (!requestManager.isOk()) {
@@ -36,6 +47,10 @@ public class RequestRouter {
         }
     }
 
+    /**
+     * 클라이언트 요청을 실행한다.
+     * @throws FileNotFoundException 파일이 발견되지 않았을 경우 발생하는 예외
+     */
     private void executeRequest() throws FileNotFoundException {
         CommandHandler commandHandler = getCommandHandler();
         commandHandler.setManagers(requestManager, responseManager);
@@ -44,9 +59,14 @@ public class RequestRouter {
         HttpMethod.valueOf(methodCommand).execute(commandHandler);
     }
 
+    /**
+     * 요청에 대한 적절한 핸들러를 가져온다.
+     * @return CommandHandler 객체
+     * @throws FileNotFoundException 파일이 발견되지 않았을 경우 발생하는 예외
+     */
     private CommandHandler getCommandHandler() throws FileNotFoundException {
         FilePath filePath = requestManager.getFilePath();
-        String filePathUrl = filePath.getFilePathUrl();
+        String filePathUrl = filePath.getFilePath();
         String absoluteFilePathUrl = DirectoryMatcher.matchDirectory(filePathUrl);
         if (UrlMapper.isValidCommand(filePathUrl)) {
             return UrlMapper.matchCommandHandler(filePathUrl);

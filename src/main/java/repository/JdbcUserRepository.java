@@ -13,6 +13,9 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import model.User;
 
+/**
+ * JDBC를 사용하여 사용자 데이터베이스에 대한 작업을 구현한 클래스
+ */
 public class JdbcUserRepository implements UserRepository {
     private static final String INSERT_SQL = "INSERT INTO users (user_id, user_pw, user_name, user_email) VALUES (?, ?, ?, ?)";
     private static final String SELECT_BY_USER_ID_SQL = "SELECT * FROM users WHERE user_id = ?";
@@ -20,6 +23,11 @@ public class JdbcUserRepository implements UserRepository {
 
     private final DataSource dataSource;
 
+    /**
+     * JdbcUserRepository를 생성하는 생성자
+     *
+     * @param dataSource 데이터베이스 연결을 위한 DataSource
+     */
     public JdbcUserRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -77,6 +85,13 @@ public class JdbcUserRepository implements UserRepository {
         }
     }
 
+    /**
+     * ResultSet으로부터 User 객체를 생성한다.
+     *
+     * @param rs ResultSet 객체
+     * @return 생성된 User 객체
+     * @throws SQLException SQL 예외가 발생한 경우
+     */
     private User generateUser(ResultSet rs) throws SQLException {
         String user_id = rs.getString("user_id");
         String user_pw = rs.getString("user_pw");

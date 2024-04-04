@@ -17,7 +17,15 @@ import static utils.Constant.LOGIN_PATH;
 import static utils.Constant.REGISTRATION_HTML;
 import static utils.Constant.REGISTRATION_PATH;
 
+/**
+ * 디렉토리 경로를 매칭하는 유틸리티 클래스
+ */
 public class DirectoryMatcher {
+    /**
+     * 주어진 베이스 경로에 대한 디렉토리 경로를 반환한다.
+     * @param basePath 베이스 경로
+     * @return 해당하는 디렉토리 경로
+     */
     public static String matchDirectory(String basePath) {
         if (basePath.equals(BASE_PATH)) {
             return BASE_DIRECTORY_PATH + BASE_HTML;

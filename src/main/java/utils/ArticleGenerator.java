@@ -16,6 +16,9 @@ import model.Article;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * 게시글 생성 유틸리티 클래스
+ */
 public class ArticleGenerator {
     private static final Logger logger = LoggerFactory.getLogger(ArticleGenerator.class);
     private static final String BOUNDARY_REGEX = "^------WebKitFormBoundary.*$";
@@ -24,6 +27,13 @@ public class ArticleGenerator {
     private static final Pattern IMAGE_PATTERN
             = Pattern.compile("^\s*Content-Disposition:\s*form-data;\s*name=\"articleImage\";\s*filename=\"(.*?)\"");
 
+    /**
+     * 게시글을 생성한다.
+     *
+     * @param body     게시글 데이터
+     * @param userName 작성자 이름
+     * @return 생성된 Article 객체
+     */
     public static Article generateArticle(byte[] body, String userName) {
         String content = "";
         String imageName = "";

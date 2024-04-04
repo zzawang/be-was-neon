@@ -18,6 +18,9 @@ import utils.Decoder;
 import utils.DirectoryMatcher;
 import utils.StaticFileReader;
 
+/**
+ * 인증된 사용자의 기본 페이지 처리를 담당하는 클래스
+ */
 public class UserHomeHandler extends CommandHandler {
     private static final String ARTICLE_REGEX = "\s*article=\s*";
     private static final String USER_NAME_REPLACEMENT = "user_name_replacement";
@@ -64,6 +67,11 @@ public class UserHomeHandler extends CommandHandler {
                             </li>
             """;
 
+    /**
+     * 인증된 사용자가 아닌 경우 기본 경로로 리다이렉션한다.
+     * 아무 게시글도 없거나 잘못된 페이지 번호에 접근했을 경우 페이지 경고 경로로 리다이렉션한다.
+     * 게시물을 로드하고 해당 게시물의 댓글을 생성하여 응답한다.
+     */
     @Override
     public void handleGetRequest() {
         if (!sessionManager.isAuthorizedUser()) {

@@ -11,6 +11,9 @@ import java.util.List;
 import javax.sql.DataSource;
 import model.Comment;
 
+/**
+ * JDBC를 사용하여 CommentRepository를 구현한 클래스
+ */
 public class JdbcCommentRepository implements CommentRepository {
     private static final String INSERT_SQL = "INSERT INTO comment (aid, content) VALUES (?, ?)";
     private static final String SELECT_BY_AID_SQL = "SELECT * FROM comment WHERE aid = ?";
@@ -18,6 +21,11 @@ public class JdbcCommentRepository implements CommentRepository {
 
     private final DataSource dataSource;
 
+    /**
+     * JdbcCommentRepository를 생성하는 생성자
+     *
+     * @param dataSource 데이터베이스 연결을 위한 DataSource
+     */
     public JdbcCommentRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -74,6 +82,13 @@ public class JdbcCommentRepository implements CommentRepository {
         }
     }
 
+    /**
+     * ResultSet으로부터 Comment 객체를 생성한다.
+     *
+     * @param rs ResultSet 객체
+     * @return 생성된 Comment 객체
+     * @throws SQLException SQL 예외가 발생한 경우
+     */
     private Comment generateComment(ResultSet rs) throws SQLException {
         long id = rs.getLong("id");
         long aid = rs.getLong("aid");

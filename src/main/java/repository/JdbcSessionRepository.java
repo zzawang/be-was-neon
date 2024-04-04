@@ -13,6 +13,9 @@ import java.util.Optional;
 import javax.sql.DataSource;
 import model.Session;
 
+/**
+ * JDBC를 사용하여 세션 데이터베이스에 대한 작업을 구현한 클래스
+ */
 public class JdbcSessionRepository implements SessionRepository {
     private static final String INSERT_SQL = "INSERT INTO session (sid, user_id, user_name, user_email) VALUES (?, ?, ?, ?)";
     private static final String SELECT_BY_SID_SQL = "SELECT * FROM session WHERE sid = ?";
@@ -22,6 +25,11 @@ public class JdbcSessionRepository implements SessionRepository {
 
     private final DataSource dataSource;
 
+    /**
+     * JdbcSessionRepository를 생성하는 생성자
+     *
+     * @param dataSource 데이터베이스 연결을 위한 DataSource
+     */
     public JdbcSessionRepository(DataSource dataSource) {
         this.dataSource = dataSource;
     }
@@ -108,6 +116,13 @@ public class JdbcSessionRepository implements SessionRepository {
         }
     }
 
+    /**
+     * ResultSet으로부터 Session 객체를 생성한다.
+     *
+     * @param resultSet ResultSet 객체
+     * @return 생성된 Session 객체
+     * @throws SQLException SQL 예외가 발생한 경우
+     */
     private Session generateSession(ResultSet resultSet) throws SQLException {
         long id = resultSet.getLong("id");
         String sid = resultSet.getString("sid");
