@@ -1,37 +1,19 @@
 package http.handler;
 
-import http.request.FilePath;
-import http.response.ContentType;
-import java.io.File;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import session.SessionManager;
-import utils.StaticFileReader;
+import utils.Decoder;
 
+/**
+ * 특정 요청(/login, /main)이 아닌 요청에 대한 정적 파일을 제공하는 클래스
+ * CommandHandler 클래스의 handleGetRequest 메서드를 오버라이드하여 파일을 제공하는 방법을 구현한다.
+ */
 public class FileHandler extends CommandHandler {
-    private static final String ACCOUNT_REGEX = "(<p class=\"post__account__nickname\">).*?(</p>)";
-
+    /**
+     * 특정 url의 파일을 제공한다.
+     */
     @Override
     public void handleGetRequest() {
-        FilePath filePath = requestManager.getFilePath();
-        File file = filePath.makeFile();
-        StaticFileReader staticFileReader = new StaticFileReader(file);
-        ContentType contentType = getContentType(filePath);
-        byte[] responseBody = verifyResponseBody(staticFileReader);
-
-        responseManager.setOkResponse(contentType, responseBody);
-    }
-
-    private byte[] verifyResponseBody(StaticFileReader staticFileReader) {
-        SessionManager sessionManager = new SessionManager(requestManager);
-        String content = staticFileReader.readAsStr();
-
-        Matcher accountMatcher = Pattern.compile(ACCOUNT_REGEX).matcher(content);
-        if (sessionManager.isAuthorizedUser() && accountMatcher.find()) {
-            String userName = sessionManager.getUserName();
-            String replacement = accountMatcher.replaceAll("$1" + userName + "$2");
-            return replacement.getBytes();
-        }
-        return staticFileReader.readAllBytes();
+        // 요청된 파일 경로가 한글일 수 있으므로 디코딩한다.
+        String filePathUrl = Decoder.decodeStr(requestManager.getFilePath().getFilePath());
+        serveFileFromDirectory(filePathUrl);
     }
 }

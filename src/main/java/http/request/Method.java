@@ -4,6 +4,9 @@ import http.handler.CommandHandler;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+/**
+ * HTTP 메서드를 나타내는 클래스
+ */
 public class Method {
     public enum HttpMethod {
         GET(CommandHandler::handleGetRequest),
@@ -21,6 +24,11 @@ public class Method {
             this.function = function;
         }
 
+        /**
+         * HTTP 메서드에 대한 처리를 실행한다.
+         *
+         * @param commandHandler HTTP 요청에 대한 CommandHandler 자식 클래스
+         */
         public void execute(CommandHandler commandHandler) {
             function.accept(commandHandler);
         }
@@ -30,6 +38,11 @@ public class Method {
 
     private final String method;
 
+    /**
+     * Method 클래스의 생성자
+     *
+     * @param methodCommand HTTP 메서드
+     */
     public Method(String methodCommand) {
         String method = methodCommand.toUpperCase();
         if (!isValidMethod(method)) {
@@ -43,6 +56,11 @@ public class Method {
                 .anyMatch(httpMethod -> httpMethod.name().equals(method));
     }
 
+    /**
+     * HTTP 메서드를 반환한다.
+     *
+     * @return HTTP 메서드 문자열
+     */
     public String getMethodCommand() {
         return method;
     }

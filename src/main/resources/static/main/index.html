@@ -16,7 +16,7 @@
                 <a class="btn btn_contained btn_size_s" href="/article">글쓰기</a>
             </li>
             <li class="header__menu__item">
-                <form id="logout-form" action="/user/logout" method="POST">
+                <form id="logout-form" action="/logout" method="POST">
                     <button id="logout-btn" class="btn btn_ghost btn_size_s" type="submit">로그아웃</button>
                 </form>
             </li>
@@ -26,9 +26,9 @@
         <div class="post">
             <div class="post__account">
                 <img class="post__account__img" src="/img/post-account.png"/>
-                <p class="post__account__nickname">account</p>
+                <p class="post__account__nickname">user_name_replacement</p>
             </div>
-            <img class="post__img" src="/img/post.png"/>
+            <img class="post__img" src="article_img_replacement"/>
             <div class="post__menu">
                 <ul class="post__menu__personal">
                     <li>
@@ -47,66 +47,16 @@
                 </button>
             </div>
             <p class="post__article">
-                푸바오 너무너무 귀엽당 ㅠㅡㅠ
+                article_content_replacement
             </p>
         </div>
         <ul class="comment">
-            <li class="comment__item">
-                <div class="comment__item__user">
-                    <img class="comment__item__user__img"/>
-                    <p class="comment__item__user__nickname">account</p>
-                </div>
-                <p class="comment__item__article">
-                    중국 가지마 푸바옹
-                </p>
-            </li>
-            <li class="comment__item">
-                <div class="comment__item__user">
-                    <img class="comment__item__user__img"/>
-                    <p class="comment__item__user__nickname">account</p>
-                </div>
-                <p class="comment__item__article">
-                    푸바오 졸귀탱
-                </p>
-            </li>
-            <li class="comment__item">
-                <div class="comment__item__user">
-                    <img class="comment__item__user__img"/>
-                    <p class="comment__item__user__nickname">account</p>
-                </div>
-                <p class="comment__item__article">
-                    당근 마시쪙
-                </p>
-            </li>
-            <li class="comment__item hidden">
-                <div class="comment__item__user">
-                    <img class="comment__item__user__img"/>
-                    <p class="comment__item__user__nickname">account</p>
-                </div>
-                <p class="comment__item__article">Comment 1</p>
-            </li>
-            <li class="comment__item hidden">
-                <div class="comment__item__user">
-                    <img class="comment__item__user__img"/>
-                    <p class="comment__item__user__nickname">account</p>
-                </div>
-                <p class="comment__item__article">Comment 2</p>
-            </li>
-            <li class="comment__item hidden">
-                <div class="comment__item__user">
-                    <img class="comment__item__user__img"/>
-                    <p class="comment__item__user__nickname">account</p>
-                </div>
-                <p class="comment__item__article">Comment 3</p>
-            </li>
-            <button id="show-all-btn" class="btn btn_ghost btn_size_m">
-                모든 댓글 보기(3개)
-            </button>
+            comment_id_replacement
         </ul>
         <nav class="nav">
             <ul class="nav__menu">
                 <li class="nav__menu__item">
-                    <a class="nav__menu__item__btn" href="">
+                    <a class="nav__menu__item__btn" href="pre_article_id_replacement">
                         <img
                                 class="nav__menu__item__img"
                                 src="/img/ci_chevron-left.svg"
@@ -115,10 +65,10 @@
                     </a>
                 </li>
                 <li class="nav__menu__item">
-                    <a class="btn btn_ghost btn_size_m" href="/comment">댓글 작성</a>
+                    <a class="btn btn_ghost btn_size_m" href="comment_btn_replacement">댓글 작성</a>
                 </li>
                 <li class="nav__menu__item">
-                    <a class="nav__menu__item__btn" href="">
+                    <a class="nav__menu__item__btn" href="next_article_id_replacement">
                         다음 글
                         <img
                                 class="nav__menu__item__img"

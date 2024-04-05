@@ -15,10 +15,10 @@ class UserTest {
     @Test
     void create() {
         User user = new User(ID, PASSWORD, NAME, EMAIL);
-        assertThat(user.getId()).isEqualTo(ID);
-        assertThat(user.getPassword()).isEqualTo(PASSWORD);
-        assertThat(user.getName()).isEqualTo(NAME);
-        assertThat(user.getEmail()).isEqualTo(EMAIL);
+        assertThat(user.getUserId()).isEqualTo(ID);
+        assertThat(user.getUserPw()).isEqualTo(PASSWORD);
+        assertThat(user.getUserName()).isEqualTo(NAME);
+        assertThat(user.getUserEmail()).isEqualTo(EMAIL);
     }
 
     @DisplayName("User의 toString()메소드가 알맞은 문자열로 생성될 수 있다.")
