@@ -15,7 +15,7 @@ import model.Comment;
  * JDBC를 사용하여 CommentRepository를 구현한 클래스
  */
 public class JdbcCommentRepository implements CommentRepository {
-    private static final String INSERT_SQL = "INSERT INTO comment (aid, content) VALUES (?, ?)";
+    private static final String INSERT_SQL = "INSERT INTO comment (aid, userName, content) VALUES (?, ?, ?)";
     private static final String SELECT_BY_AID_SQL = "SELECT * FROM comment WHERE aid = ?";
     private static final String SELECT_ALL_SQL = "SELECT * FROM comment";
 
@@ -35,7 +35,8 @@ public class JdbcCommentRepository implements CommentRepository {
         try (Connection conn = dataSource.getConnection();
              PreparedStatement pstmt = conn.prepareStatement(INSERT_SQL, Statement.RETURN_GENERATED_KEYS)) {
             pstmt.setLong(1, comment.getAid());
-            pstmt.setString(2, comment.getContent());
+            pstmt.setString(2, comment.getUserName());
+            pstmt.setString(3, comment.getContent());
             pstmt.executeUpdate();
             ResultSet rs = pstmt.getGeneratedKeys();
 
@@ -92,7 +93,8 @@ public class JdbcCommentRepository implements CommentRepository {
     private Comment generateComment(ResultSet rs) throws SQLException {
         long id = rs.getLong("id");
         long aid = rs.getLong("aid");
+        String userName = rs.getString("userName");
         String content = rs.getString("content");
-        return new Comment(id, aid, content);
+        return new Comment(id, aid, userName, content);
     }
 }

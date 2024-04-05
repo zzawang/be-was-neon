@@ -115,10 +115,9 @@ public class UserHomeHandler extends CommandHandler {
         if (comments.isEmpty()) {
             return articleBody.replaceAll(COMMENT_ID_REPLACEMENT, EMPTY);
         }
-        String userName = sessionManager.getUserName();
         StringBuilder sb = new StringBuilder();
-        comments.stream().map(comment -> Decoder.decodeStr(comment.getContent()))
-                .forEach(content -> sb.append(String.format(COMMENT_HTML, userName, content)));
+        comments.forEach(comment -> sb.append(String.format(COMMENT_HTML, Decoder.decodeStr(comment.getUserName()),
+                Decoder.decodeStr(comment.getContent()))));
         return articleBody.replaceAll(COMMENT_ID_REPLACEMENT, sb.toString());
     }
 

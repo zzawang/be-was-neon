@@ -46,8 +46,9 @@ public class UserCommentHandler extends CommandHandler {
 
         String query = queryOpt.get().replaceAll(ARTICLE_REGEX, EMPTY);
         long aid = Long.parseLong(query);
+        String name = sessionManager.getUserName();
         String content = requestManager.extractComment();
-        commentDb.addComment(new Comment(aid, content));
+        commentDb.addComment(new Comment(aid, name, content));
         responseManager.setRedirectResponse(String.format(NAV_PATH, aid));
     }
 }

@@ -8,6 +8,7 @@ public class Comment {
 
     private long id;
     private long aid;
+    private String userName;
     private String content;
 
     /**
@@ -17,9 +18,10 @@ public class Comment {
      * @param aid     게시물 ID
      * @param content 댓글 내용
      */
-    public Comment(long id, long aid, String content) {
+    public Comment(long id, long aid, String userName, String content) {
         this.id = id;
         this.aid = aid;
+        this.userName = userName;
         this.content = content;
     }
 
@@ -29,8 +31,9 @@ public class Comment {
      * @param aid     게시물 ID
      * @param content 댓글 내용
      */
-    public Comment(long aid, String content) {
+    public Comment(long aid, String userName, String content) {
         this.aid = aid;
+        this.userName = userName;
         this.content = content;
     }
 
@@ -68,6 +71,10 @@ public class Comment {
      */
     public long getAid() {
         return aid;
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     /**
