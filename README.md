@@ -4,33 +4,6 @@
 
 <br>
 
-# 웹 서버 1단계 - index.html 응답
-
-## ✅ 체크리스트
-
-- [X] 정적인 html 파일 응답(http://localhost:8080/index.html)
-- [X] HTTP Request 내용 출력
-- [X] 파일의 내용을 바이트 배열로 반환하는 기능을 JDK의 nio를 사용하지 않고 구현
-- [X] Java Thread 기반의 기존 프로젝트를 Concurrent 패키지를 사용하도록 변경
-- [X] URl 추출 기능 FileExtractorTest 클래스의 static 메소드로 분리
-- [X] FileExtractorTest 클래스 Test 추가
-- [X] 코드로 표현할 수 없었던 내용은 주석 달기
-
-<br><br>
-
-# 웹 서버 2,3단계 - GET으로 회원가입, 다양한 컨텐츠 타입 지원
-
-## ✅ 체크리스트
-
-- [X] 문자열 디코딩 기능 구현
-- [X] 사용자가 입력한 값을 검증하고 잘못된 값을 입력하면 서버에 전달하지 않고 오류 팝업창을 띄운다.
-- [X] 사용자가 입력한 값을 파싱해 model.User 클래스에 저장
-- [X] 가입 버튼을 클릭하여 사용자가 입력한 값을 서버에 전달
-- [X] model.User 클래스에 정상적으로 저장되었다면 User의 `toString()`메소드를 사용하여 생성된 결과를 출력한다.
-- [X] 다양한 컨텐츠 타입 지원
-
-<br><br><br>
-
 ## 이렇게 구현했어요 🤗
 
 # 웹 서버 1단계 - index.html 응답
