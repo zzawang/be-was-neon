@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import model.Article;
@@ -89,7 +90,9 @@ public class ArticleGenerator {
         Matcher imageMatcher = IMAGE_PATTERN.matcher(contentInfo);
         String fileName = EMPTY;
         if (imageMatcher.find()) {
-            fileName = imageMatcher.group(1);
+            String fullFileName = imageMatcher.group(1);
+            String[] fileNames = fullFileName.split("\\.");
+            fileName = fileNames[0] + UUID.randomUUID() + "." + fileNames[1];
         }
         if (fileName.equals(EMPTY)) {
             return EMPTY_IMG;
